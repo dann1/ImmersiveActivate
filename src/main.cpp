@@ -1,5 +1,6 @@
 #include "Settings.h"
 #include "Manager.h"
+#include "Renamer.h"
 
 void MessageHandler(SKSE::MessagingInterface::Message* a_message)
 {
@@ -14,7 +15,7 @@ void MessageHandler(SKSE::MessagingInterface::Message* a_message)
 extern "C" DLLEXPORT constinit auto SKSEPlugin_Version = []() {
 	SKSE::PluginVersionData v;
 	v.PluginVersion(Version::MAJOR);
-	v.PluginName("SimpleActivateSKSE");
+	v.PluginName("ImmersiveActivate");
 	v.AuthorName("powerofthree");
 	v.UsesAddressLibrary();
 	v.UsesUpdatedStructs();
@@ -26,7 +27,7 @@ extern "C" DLLEXPORT constinit auto SKSEPlugin_Version = []() {
 extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Query(const SKSE::QueryInterface* a_skse, SKSE::PluginInfo* a_info)
 {
 	a_info->infoVersion = SKSE::PluginInfo::kVersion;
-	a_info->name = "SimpleActivateSKSE";
+	a_info->name = "ImmersiveActivate";
 	a_info->version = Version::MAJOR;
 
 	if (a_skse->IsEditor()) {

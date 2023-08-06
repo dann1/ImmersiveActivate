@@ -2,7 +2,7 @@
 
 bool Settings::LoadSettings()
 {
-	constexpr auto path = L"Data/SKSE/Plugins/po3_SimpleActivateSKSE.ini";
+	constexpr auto path = L"Data/SKSE/Plugins/ImmersiveActivate.ini";
 
 	CSimpleIniA ini;
 	ini.SetUnicode();

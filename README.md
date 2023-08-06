@@ -1,6 +1,6 @@
-# Simple Activate SKSE
+# Immersive Activate
 
-SKSE plugin that streamlines activation prompts
+A fork from [po3 Simple Activate SKSE](https://github.com/powerof3/SimpleActivateSKSE). Additionally it replaces the name of the object pointed by the crosshair with generic names based on the object form type.
 
 ## Requirements
 * [CMake](https://cmake.org/)
@@ -21,8 +21,8 @@ SKSE plugin that streamlines activation prompts
 
 ## Building
 ```
-git clone https://github.com/powerof3/SimpleActivateSKSE.git
-cd SimpleActivateSKSE
+git clone https://github.com/dann1/ImmersiveActivate.git
+cd ImmersiveActivate
 cmake -B build -S .
 ```
 ## License

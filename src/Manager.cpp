@@ -1,4 +1,5 @@
 #include "Settings.h"
+#include "Renamer.h"
 
 namespace UI
 {
@@ -52,7 +53,7 @@ namespace UI
 								data->type = RE::HUDData::Type::kActivateNoLabel;
 							}
 							const std::string origText = data->text.c_str();
-							std::string text = data->text.c_str();
+							std::string text = GetFormTypeText(crossHairRef, origText);
 
 							if (const auto colorSettings = settings->GetColor(crossHairRef, origText); colorSettings && colorSettings->useColoredName) {
 								if (auto splitText = string::split(text, "\n"); splitText.size() > 1 && !colorSettings->nameColor.empty()) {
