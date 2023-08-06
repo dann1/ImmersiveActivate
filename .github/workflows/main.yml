@@ -13,7 +13,6 @@ jobs:
   run:
     uses: adya/pack-skse-mod/.github/workflows/pack.yml@main
     with:
-      AE_353_BRANCH: master-1.6.353
       FOMOD_INCLUDE_PDB: true
       FOMOD_MOD_NAME: "Immersive Activate"
       FOMOD_MOD_AUTHOR: "dann1"
