@@ -1,11 +1,14 @@
 #include "Renamer.h"
+#include "Settings.h"
 
+ 
 // TODO: Make name configurable per form type
 std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_name)
 {
 	const auto a_baseObject = a_object->GetBaseObject();
 	const auto a_formType = a_baseObject->GetFormType();
-
+	const auto settings = Settings::GetSingleton();
+	
 	logger::debug("CrossHair FormType: {}", a_formType);
 
 	switch (a_formType) {
@@ -23,11 +26,11 @@ std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_
 			return "Person";
 		}
 	case RE::FormType::Door:
-		return "Door";
+		return settings->door_show.text;
 	case RE::FormType::Activator:
 		return a_name;
 	case RE::FormType::Container:
-		return "Storage";
+		return settings->container_show.text;
 	case RE::FormType::Furniture:
 		return a_name;
 	case RE::FormType::Flora:
@@ -37,11 +40,11 @@ std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_
 		return "Reagent";
 	// TODO: Potion/Poison detection
 	case RE::FormType::AlchemyItem:
-		return "Provision";
+		return settings->ingredient_show.text;
 	case RE::FormType::Ammo:
-		return "Ammunition";
+		return settings->ammo_show.text;
 	case RE::FormType::Weapon:
-		return "Weapon";
+		return settings->weapon_show.text;
 	case RE::FormType::Armor:
 		if (a_object->IsJewelry()) {
 			return "Jewel";
@@ -50,13 +53,13 @@ std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_
 		}
 	case RE::FormType::Scroll:
 	case RE::FormType::Note:
-		return "Document";
+		return settings->scroll_note_show.text;
 	case RE::FormType::Book:
-		return "Book";
+		return settings->book_show.text;
 	case RE::FormType::SoulGem:
-		return "SoulGem";
+		return settings->soulgem_show.text;
 	case RE::FormType::KeyMaster:
-		return "Key";
+		return settings->key_show.text;
 	default:
 		// TODO: Detect septim as money
 		const auto a_formID = a_object->GetFormID();

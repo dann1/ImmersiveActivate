@@ -42,6 +42,14 @@ public:
 		{}
 	};
 
+	struct Replacer
+	{
+		std::string text;
+		explicit Replacer(std::string a_replace) :
+			text(std::move(a_replace))
+			{}
+	};
+
 	[[nodiscard]] static Settings* GetSingleton()
 	{
 		static Settings singleton;
@@ -52,6 +60,8 @@ public:
 
 	const Text* GetText(RE::FormType a_formType) const;
 	const Text* GetText(const RE::TESObjectREFRPtr& a_object) const;
+
+	
 
     const Color* GetColor(const RE::TESObjectREFRPtr& a_object, std::string_view a_text) const;
 	const Tag* GetTag(const RE::TESObjectREFRPtr& a_object) const;
@@ -90,6 +100,31 @@ private:
 	Text npc{ "NPCs" };
 	Text projectiles{ "Projectiles" };
 
+public: 
+	Replacer npc_show{ "NPC" };
+	Replacer door_show{ "Door" };
+	Replacer container_show{ "Storage" };
+	Replacer resource_show{ "Resource" };
+	Replacer ingredient_show{ "Reagent" };
+	Replacer alchemy_item_show{ "Provision" };
+	Replacer ammo_show{ "Ammunition" };
+	Replacer weapon_show{ "Weapon" };
+	Replacer armor_show{ "Equipment" };
+	Replacer scroll_note_show{ "Document" };
+	Replacer book_show{ "Book" };
+	Replacer soulgem_show{ "Strange Gem" };
+	Replacer key_show{ "Key" };
+	Replacer items_show{ "Items" };
+
+	/*	
+	case RE::FormType::Activator:
+		return a_name;	
+	case RE::FormType::Furniture:
+		return a_name;	
+	*/
+
+
+private: 
 	Color steal{ "#FF0000" };
 	Color owned{ "#FFFF00" };
 

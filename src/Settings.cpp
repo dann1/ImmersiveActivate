@@ -75,6 +75,24 @@ bool Settings::LoadSettings()
 	get_value(empty.color.useColoredName, "Empty", "Show Indicator Using Name", ";Empty container names turn grey (or custom color defined below).");
 	get_value(empty.color.nameColor, "Empty", "Custom Indicator Color", ";Color, in hex (default: grey)");
 
+	//Name Replacers
+
+	get_value(npc_show.text, "Display Replacers", "Unknown NPC", ";Hide NPC name and show generic prompt");
+	get_value(door_show.text, "Display Replacers", "Door", ";Hide cell name the door leads to and shows generic promt");
+	get_value(container_show.text, "Display Replacers", "Container", ";Hide container name and shows generic prompt");
+	get_value(resource_show.text, "Display Replacers", "Flora", ";Hide Flora and Plant name and show generic prompt");
+	get_value(ingredient_show.text, "Display Replacers", "Ingredients", ";Hide Ingredient name and show generic prompt");
+	get_value(alchemy_item_show.text, "Display Replacers", "Alchemical Items", ";Hide Potion and Poison name and show generic prompt");
+	get_value(ammo_show.text, "Display Replacers", "Ammunition", ";Hide Ammo name and show generic prompt");
+	get_value(weapon_show.text, "Display Replacers", "Weapons", ";Hide Weapon name and show generic prompt");
+	get_value(armor_show.text, "Display Replacers", "Armor", ";Hide Armor name and show generic prompt");
+	get_value(scroll_note_show.text, "Display Replacers", "Scrolls & Notes", ";Hide Scroll and Note name and show generic prompt");
+	get_value(book_show.text, "Display Replacers", "Books", ";Hide Book name and show generic prompt");
+	get_value(soulgem_show.text, "Display Replacers", "Soulgem", ";Hide Soulgem name and show generic prompt");
+	get_value(key_show.text, "Display Replacers", "Keys", ";Hide Key name and show generic prompt");
+	get_value(items_show.text, "Display Replacers", "Various Items", ";Hide names of the rest of the non-specified items and show generic prompt");
+
+
 	(void)ini.SaveFile(path);
 
 	return true;
@@ -102,6 +120,7 @@ const Settings::Text* Settings::GetText(const RE::FormType a_formType) const
 		return &items;
 	}
 }
+
 
 const Settings::Text* Settings::GetText(const RE::TESObjectREFRPtr& a_object) const
 {
