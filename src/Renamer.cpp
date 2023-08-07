@@ -12,10 +12,19 @@ std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_
 	logger::debug("CrossHair FormType: {}", a_formType);
 
 	switch (a_formType) {
-	// TODO: Refine by keyword. Humanoid, Creature, race, etc.
 	case RE::FormType::NPC:
 	case RE::FormType::LeveledNPC:
-		return settings->npc_show.text;
+		if (a_object->IsDead()) {
+			return "Corpse";
+		} else if (a_object->IsAnimal()) {
+			return "Animal";
+		} else if (a_object->IsChild()) {
+			return "Child";
+		} else if (a_object->IsDragon()) {
+			return "Dragon";
+		} else {
+			return "Person";
+		}
 	case RE::FormType::Door:
 		return settings->door_show.text;
 	case RE::FormType::Activator:
@@ -26,9 +35,10 @@ std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_
 		return a_name;
 	case RE::FormType::Flora:
 	case RE::FormType::Tree:
-		return settings->resource_show.text;
-	case RE::FormType::Ingredient:							
-		return settings->ingredient_show.text;
+		return "Resource";
+	case RE::FormType::Ingredient:
+		return "Reagent";
+	// TODO: Potion/Poison detection
 	case RE::FormType::AlchemyItem:
 		return settings->ingredient_show.text;
 	case RE::FormType::Ammo:
@@ -36,7 +46,11 @@ std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_
 	case RE::FormType::Weapon:
 		return settings->weapon_show.text;
 	case RE::FormType::Armor:
-		return settings->armor_show.text;
+		if (a_object->IsJewelry()) {
+			return "Jewel";
+		} else {
+			return "Equipment";
+		}
 	case RE::FormType::Scroll:
 	case RE::FormType::Note:
 		return settings->scroll_note_show.text;
@@ -47,6 +61,13 @@ std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_
 	case RE::FormType::KeyMaster:
 		return settings->key_show.text;
 	default:
-		return settings->items_show.text;
+		// TODO: Detect septim as money
+		const auto a_formID = a_object->GetFormID();
+
+		if (a_object->IsLockpick()) {
+			return "Lockpick";
+		} else {
+			return "Item";
+		}
 	}
 }
