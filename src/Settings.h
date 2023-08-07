@@ -102,6 +102,9 @@ private:
 
 public:
 	Replacer npc_show{ "Person" };
+	Replacer npc_dead_show{ "Corpse" };
+	Replacer npc_animal_show{ "Animal" };
+	Replacer npc_child_show{ "Child" };
 	Replacer door_show{ "Door" };
 	Replacer container_show{ "Storage" };
 	Replacer resource_show{ "Resource" };
@@ -110,11 +113,13 @@ public:
 	Replacer ammo_show{ "Ammunition" };
 	Replacer weapon_show{ "Weapon" };
 	Replacer armor_show{ "Equipment" };
+	Replacer jewelry_show{ "Equipment" };
 	Replacer scroll_note_show{ "Document" };
 	Replacer book_show{ "Book" };
 	Replacer soulgem_show{ "Gem" };
 	Replacer key_show{ "Key" };
 	Replacer item_show{ "Item" };
+	Replacer money_show{ "Item" };
 
 private:
 	Color steal{ "#FF0000" };

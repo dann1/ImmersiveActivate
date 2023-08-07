@@ -13,11 +13,11 @@ std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_
 	case RE::FormType::NPC:
 	case RE::FormType::LeveledNPC:
 		if (a_object->IsDead()) {
-			return "Corpse";
+			return settings->npc_dead_show.text;
 		} else if (a_object->IsAnimal()) {
-			return "Animal";
+			return settings->npc_animal_show.text;
 		} else if (a_object->IsChild()) {
-			return "Child";
+			return settings->npc_child_show.text;
 		} else if (a_object->IsDragon()) {
 			return "Dragon";
 		} else {
@@ -44,7 +44,7 @@ std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_
 		return settings->weapon_show.text;
 	case RE::FormType::Armor:
 		if (a_object->IsJewelry()) {
-			return "Jewel";
+			return settings->jewelry_show.text;
 		} else {
 			return settings->armor_show.text;
 		}
@@ -59,10 +59,9 @@ std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_
 		return settings->key_show.text;
 	default:
 		const auto a_formID = a_baseObject->GetFormID();
-		logger::info("Crosshair Object FormID {}", a_formID);
 
 		if (a_formID == 15) {
-			return "Money";
+			return settings->money_show.text;
 		} else if (a_object->IsLockpick()) {
 			return "Lockpick";
 		} else {
