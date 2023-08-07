@@ -61,7 +61,7 @@ public:
 	const Text* GetText(RE::FormType a_formType) const;
 	const Text* GetText(const RE::TESObjectREFRPtr& a_object) const;
 
-	
+
 
     const Color* GetColor(const RE::TESObjectREFRPtr& a_object, std::string_view a_text) const;
 	const Tag* GetTag(const RE::TESObjectREFRPtr& a_object) const;
@@ -100,8 +100,8 @@ private:
 	Text npc{ "NPCs" };
 	Text projectiles{ "Projectiles" };
 
-public: 
-	Replacer npc_show{ "NPC" };
+public:
+	Replacer npc_show{ "Person" };
 	Replacer door_show{ "Door" };
 	Replacer container_show{ "Storage" };
 	Replacer resource_show{ "Resource" };
@@ -112,19 +112,11 @@ public:
 	Replacer armor_show{ "Equipment" };
 	Replacer scroll_note_show{ "Document" };
 	Replacer book_show{ "Book" };
-	Replacer soulgem_show{ "Strange Gem" };
+	Replacer soulgem_show{ "Gem" };
 	Replacer key_show{ "Key" };
-	Replacer items_show{ "Items" };
+	Replacer item_show{ "Item" };
 
-	/*	
-	case RE::FormType::Activator:
-		return a_name;	
-	case RE::FormType::Furniture:
-		return a_name;	
-	*/
-
-
-private: 
+private:
 	Color steal{ "#FF0000" };
 	Color owned{ "#FFFF00" };
 

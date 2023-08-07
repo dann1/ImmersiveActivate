@@ -59,11 +59,11 @@ std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_
 		return settings->soulgem_show.text;
 	case RE::FormType::KeyMaster:
 		return settings->key_show.text;
-	default:  // TODO: Detect septim as money. FormID F in hex
+	default:  // TODO: Detect septim as money. FormID F in hex.
 		if (a_object->IsLockpick()) {
 			return "Lockpick";
 		} else {
-			return settings->items_show.text;
+			return settings->item_show.text;
 		}
 	}
 }
