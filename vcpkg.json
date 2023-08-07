@@ -10,6 +10,5 @@
     "rsm-binary-io",
     "spdlog",
     "xbyak"
-  ],
-  "builtin-baseline": "78b61582c9e093fda56a01ebb654be15a0033897"
+  ]
 }

@@ -1,14 +1,14 @@
 #include "Renamer.h"
 #include "Settings.h"
 
- 
+
 // TODO: Make name configurable per form type
 std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_name)
 {
 	const auto a_baseObject = a_object->GetBaseObject();
 	const auto a_formType = a_baseObject->GetFormType();
 	const auto settings = Settings::GetSingleton();
-	
+
 	logger::debug("CrossHair FormType: {}", a_formType);
 
 	switch (a_formType) {
@@ -23,7 +23,7 @@ std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_
 		} else if (a_object->IsDragon()) {
 			return "Dragon";
 		} else {
-			return "Person";
+			return settings->npc_show.text;
 		}
 	case RE::FormType::Door:
 		return settings->door_show.text;
@@ -35,12 +35,11 @@ std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_
 		return a_name;
 	case RE::FormType::Flora:
 	case RE::FormType::Tree:
-		return "Resource";
+		return settings->resource_show.text;
 	case RE::FormType::Ingredient:
-		return "Reagent";
-	// TODO: Potion/Poison detection
-	case RE::FormType::AlchemyItem:
 		return settings->ingredient_show.text;
+	case RE::FormType::AlchemyItem:  // TODO: Potion/Poison detection
+		return settings->alchemy_item_show.text;
 	case RE::FormType::Ammo:
 		return settings->ammo_show.text;
 	case RE::FormType::Weapon:
@@ -49,7 +48,7 @@ std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_
 		if (a_object->IsJewelry()) {
 			return "Jewel";
 		} else {
-			return "Equipment";
+			return settings->armor_show.text;
 		}
 	case RE::FormType::Scroll:
 	case RE::FormType::Note:
@@ -60,14 +59,11 @@ std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_
 		return settings->soulgem_show.text;
 	case RE::FormType::KeyMaster:
 		return settings->key_show.text;
-	default:
-		// TODO: Detect septim as money
-		const auto a_formID = a_object->GetFormID();
-
+	default:  // TODO: Detect septim as money. FormID F in hex
 		if (a_object->IsLockpick()) {
 			return "Lockpick";
 		} else {
-			return "Item";
+			return settings->items_show.text;
 		}
 	}
 }
