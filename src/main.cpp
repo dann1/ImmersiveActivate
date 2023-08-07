@@ -16,7 +16,7 @@ extern "C" DLLEXPORT constinit auto SKSEPlugin_Version = []() {
 	SKSE::PluginVersionData v;
 	v.PluginVersion(Version::MAJOR);
 	v.PluginName("ImmersiveActivate");
-	v.AuthorName("powerofthree");
+	v.AuthorName("dann1");
 	v.UsesAddressLibrary();
 	v.UsesUpdatedStructs();
 	v.CompatibleVersions({ SKSE::RUNTIME_LATEST });
