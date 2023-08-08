@@ -101,25 +101,25 @@ private:
 	Text projectiles{ "Projectiles" };
 
 public:
-	Replacer npc_show{ "Person" };
-	Replacer npc_dead_show{ "Corpse" };
-	Replacer npc_animal_show{ "Animal" };
-	Replacer npc_child_show{ "Child" };
-	Replacer door_show{ "Door" };
-	Replacer container_show{ "Storage" };
-	Replacer resource_show{ "Resource" };
-	Replacer ingredient_show{ "Reagent" };
 	Replacer alchemy_item_show{ "Provision" };
 	Replacer ammo_show{ "Ammunition" };
-	Replacer weapon_show{ "Weapon" };
 	Replacer armor_show{ "Equipment" };
-	Replacer jewelry_show{ "Equipment" };
-	Replacer scroll_note_show{ "Document" };
 	Replacer book_show{ "Book" };
-	Replacer soulgem_show{ "Gem" };
-	Replacer key_show{ "Key" };
+	Replacer container_show{ "Storage" };
+	Replacer door_show{ "Door" };
+	Replacer ingredient_show{ "Reagent" };
 	Replacer item_show{ "Item" };
-	Replacer money_show{ "Item" };
+	Replacer jewelry_show{ "Jewel" };
+	Replacer key_show{ "Key" };
+	Replacer money_show{ "Money" };
+	Replacer npc_animal_show{ "Animal" };
+	Replacer npc_child_show{ "Child" };
+	Replacer npc_dead_show{ "Corpse" };
+	Replacer npc_show{ "Person" };
+	Replacer resource_show{ "Resource" };
+	Replacer scroll_note_show{ "Document" };
+	Replacer soulgem_show{ "Gem" };
+	Replacer weapon_show{ "Weapon" };
 
 private:
 	Color steal{ "#FF0000" };
