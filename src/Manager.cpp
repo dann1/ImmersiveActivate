@@ -53,10 +53,10 @@ namespace UI
 								data->type = RE::HUDData::Type::kActivateNoLabel;
 							}
 							const std::string origText = data->text.c_str();
-							std::string text = GetFormTypeText(crossHairRef, origText);
+							std::string newText = ReplaceFormTypeText(crossHairRef, origText);
 
 							if (const auto colorSettings = settings->GetColor(crossHairRef, origText); colorSettings && colorSettings->useColoredName) {
-								if (auto splitText = string::split(text, "\n"); splitText.size() > 1 && !colorSettings->nameColor.empty()) {
+								if (auto splitText = string::split(newText, "\n"); splitText.size() > 1 && !colorSettings->nameColor.empty()) {
 									string::replace_first_instance(splitText[kName], detail::get_owned_tag(), "");
 
 									std::string coloredName{ colored_font };
@@ -64,40 +64,40 @@ namespace UI
 									string::replace_first_instance(coloredName, "text", splitText[kName]);
 									splitText[kName] = coloredName;
 
-									text = string::join(splitText, "\n");
+									newText = string::join(splitText, "\n");
 								}
 							}
 
 							if (textSettings->hideText) {
 								const bool hasValue = detail::has_gold_value(crossHairRef);
-								if (auto splitText = string::split(text, "\n"); splitText.size() > 2) {
+								if (auto splitText = string::split(newText, "\n"); splitText.size() > 2) {
 									if (hasValue && textSettings->hideButton) {
 										splitText[kPrompt] = "\n";
 									} else {
 										splitText.erase(splitText.begin());
 									}
-									text = string::join(splitText, "\n");
+									newText = string::join(splitText, "\n");
 								} else if (splitText.size() > 1) {
-									text = hasValue && textSettings->hideButton ? "\n" + splitText[kName] :
+									newText = hasValue && textSettings->hideButton ? "\n" + splitText[kName] :
 									                                              splitText[kName];
 								}
 							}
 
 							if (const auto tag = settings->GetTag(crossHairRef); tag) {
 								if (string::split(origText, "\n").size() > 2) {
-									auto splitText = string::split(text, "\n");
+									auto splitText = string::split(newText, "\n");
 									if (tag->hideTag) {
 										splitText.pop_back();
-										text = string::join(splitText, "\n");
+										newText = string::join(splitText, "\n");
 									} else if (!tag->tag.empty()) {
 										splitText.back() = tag->tag;
-										text = string::join(splitText, "\n");
+										newText = string::join(splitText, "\n");
 									}
 								}
 							}
 
-							if (text != origText) {
-								data->text = text;
+							if (newText != origText) {
+								data->text = newText;
 							}
 						}
 					}
