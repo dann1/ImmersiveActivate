@@ -1,36 +1,36 @@
 #include "Renamer.h"
 #include "Settings.h"
 
-
 // Object Names have 2 or lines. Replacing the whole name leads to plain white text.
 // Action: Talk, Sleep with optional color formatting
 // Name: Camilla Carlotta, Bed (Owned)
 // Embedded Images: empty tag triangle, or locked
-std::string ReplaceRefText(const std::string& original, const std::string& replacement) {
-    std::vector<std::string> lines;
-    std::stringstream ss(original);
-    std::string line;
-    int line_count = 0;
+std::string ReplaceRefText(const std::string& original, const std::string& replacement)
+{
+	std::vector<std::string> lines;
+	std::stringstream ss(original);
+	std::string line;
+	int line_count = 0;
 
-    while (std::getline(ss, line, '\n')) {
-        if (line_count == 1) { // If it's the second line, replace it
-            lines.push_back(replacement);
-        } else {
-            lines.push_back(line);
-        }
-        line_count++;
-    }
+	while (std::getline(ss, line, '\n')) {
+		if (line_count == 1) {  // If it's the second line, replace it
+			lines.push_back(replacement);
+		} else {
+			lines.push_back(line);
+		}
+		line_count++;
+	}
 
-    // Combine the modified lines back into a single string
-    std::string result;
-    for (size_t i = 0; i < lines.size(); ++i) {
-        result += lines[i];
-        if (i < lines.size() - 1) {
-            result += "\n"; // Add newline character between lines
-        }
-    }
+	// Combine the modified lines back into a single string
+	std::string result;
+	for (size_t i = 0; i < lines.size(); ++i) {
+		result += lines[i];
+		if (i < lines.size() - 1) {
+			result += "\n";  // Add newline character between lines
+		}
+	}
 
-    return result;
+	return result;
 }
 
 std::string DecideSkip(std::string a_setting_value, std::string a_text)
@@ -41,6 +41,46 @@ std::string DecideSkip(std::string a_setting_value, std::string a_text)
 	return ReplaceRefText(a_text, a_setting_value);
 }
 
+bool HasKeywordByEditorID(const RE::TESObjectREFRPtr& a_objectPtr, const char* editorID)
+{
+	if (!a_objectPtr) {
+		return false;
+	}
+
+	// Get the object from the smart pointer
+	auto a_object = a_objectPtr.get();
+	if (!a_object) {
+		return false;
+	}
+
+	// Get the base object that might contain the keywords
+	auto baseObject = a_object->GetBaseObject();
+	if (!baseObject) {
+		return false;
+	}
+
+	// Try to cast to a keyword form interface
+	auto keywordForm = baseObject->As<RE::BGSKeywordForm>();
+	if (!keywordForm) {
+		return false;
+	}
+
+	// Iterate through the keywords
+	for (std::uint32_t i = 0; i < keywordForm->GetNumKeywords(); ++i) {
+		auto keywordOpt = keywordForm->GetKeywordAt(i);
+		if (keywordOpt) {
+			auto keyword = *keywordOpt;
+			if (keyword) {
+				const char* keywordEditorID = keyword->GetFormEditorID();
+				if (keywordEditorID && std::strcmp(keywordEditorID, editorID) == 0) {
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}
 
 std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_text)
 {
@@ -51,6 +91,7 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 #ifdef _DEBUG
 	auto clogger = RE::ConsoleLog::GetSingleton();
 
+	clogger->Print("------------------------ Immersive Activate Debugging");
 	clogger->Print("FormType: %s", SPDLOG_BUF_TO_STRING(a_formType).c_str());
 	clogger->Print("------------------- Original Name -------------------");
 	clogger->Print(SPDLOG_BUF_TO_STRING(a_text).c_str());
@@ -83,8 +124,13 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 		return ReplaceRefText(a_text, settings->resource_show.text);
 	case RE::FormType::Ingredient:
 		return ReplaceRefText(a_text, settings->ingredient_show.text);
-	case RE::FormType::AlchemyItem:  // TODO: Potion/Poison detection
-		return ReplaceRefText(a_text, settings->alchemy_item_show.text);
+	case RE::FormType::AlchemyItem:
+		if (HasKeywordByEditorID(a_object, "VendorItemPotion")) {
+			return ReplaceRefText(a_text, "Vial");
+
+		} else {
+			return ReplaceRefText(a_text, settings->alchemy_item_show.text);
+		}
 	case RE::FormType::Ammo:
 		return ReplaceRefText(a_text, settings->ammo_show.text);
 	case RE::FormType::Weapon:
