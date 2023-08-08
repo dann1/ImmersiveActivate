@@ -1,6 +1,14 @@
 #include "Renamer.h"
 #include "Settings.h"
 
+std::string DecideSkip(std::string a_setting_value, std::string a_name)
+{
+	if (a_setting_value == "-") {
+		return a_name;
+	}
+	return a_setting_value;
+}
+
 std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_name)
 {
 	const auto a_baseObject = a_object->GetBaseObject();
@@ -21,11 +29,11 @@ std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_
 		} else if (a_object->IsAnimal()) {
 			return settings->npc_animal_show.text;
 		} else if (a_object->IsChild()) {
-			return settings->npc_child_show.text;
+			return DecideSkip(settings->npc_child_show.text, a_name);
 		} else if (a_object->IsDragon()) {
 			return "Dragon";
 		} else {
-			return settings->npc_show.text;
+			return DecideSkip(settings->npc_show.text, a_name);
 		}
 	case RE::FormType::Door:
 		return settings->door_show.text;
