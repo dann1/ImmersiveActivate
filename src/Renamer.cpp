@@ -7,7 +7,11 @@ std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_
 	const auto a_formType = a_baseObject->GetFormType();
 	const auto settings = Settings::GetSingleton();
 
-	logger::debug("CrossHair FormType: {}", a_formType);
+#ifdef _DEBUG
+	auto clogger = RE::ConsoleLog::GetSingleton();
+
+	clogger->Print("FormType: %s", SPDLOG_BUF_TO_STRING(a_formType).c_str());
+#endif
 
 	switch (a_formType) {
 	case RE::FormType::NPC:
@@ -59,6 +63,10 @@ std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_
 		return settings->key_show.text;
 	default:
 		const auto a_formID = a_baseObject->GetFormID();
+
+#ifdef _DEBUG
+		clogger->Print("FormID: %s", SPDLOG_BUF_TO_STRING(a_formID).c_str());
+#endif
 
 		if (a_formID == 15) {
 			return settings->money_show.text;
