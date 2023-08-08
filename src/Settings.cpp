@@ -77,7 +77,6 @@ bool Settings::LoadSettings()
 
 	//Name Replacers
 	const char* section = "Display Replacers";
-	// const char* keys[19] = { "NPCs", "NPCsCorpses", "NPCsChildren", "NPCsAnimals", "Doors", "Containers", "Flora", "Ingredients", "Alchemical Items", "Ammunition", "Weapons", "Armors", "Jewels", "Scrolls & Notes", "Books", "Soulgems", "Keys", "Money", "Various Items" };
 
 	get_value(npc_show.text, section, "NPCs", ";Hide NPC name and show generic prompt");
 	get_value(npc_dead_show.text, section, "NPCsCorpses", ";Hide NPC name and show generic prompt when NPC is dead. Takes priorty over other NPC name replacers");
