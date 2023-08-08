@@ -1,13 +1,25 @@
 #include "Renamer.h"
 #include "Settings.h"
 
+std::string DecideSkip(std::string a_setting_value, std::string a_name)
+{
+	if (a_setting_value == "-") {
+		return a_name;
+	}
+	return a_setting_value;
+}
+
 std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_name)
 {
 	const auto a_baseObject = a_object->GetBaseObject();
 	const auto a_formType = a_baseObject->GetFormType();
 	const auto settings = Settings::GetSingleton();
 
-	logger::debug("CrossHair FormType: {}", a_formType);
+#ifdef _DEBUG
+	auto clogger = RE::ConsoleLog::GetSingleton();
+
+	clogger->Print("FormType: %s", SPDLOG_BUF_TO_STRING(a_formType).c_str());
+#endif
 
 	switch (a_formType) {
 	case RE::FormType::NPC:
@@ -17,11 +29,11 @@ std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_
 		} else if (a_object->IsAnimal()) {
 			return settings->npc_animal_show.text;
 		} else if (a_object->IsChild()) {
-			return settings->npc_child_show.text;
+			return DecideSkip(settings->npc_child_show.text, a_name);
 		} else if (a_object->IsDragon()) {
 			return "Dragon";
 		} else {
-			return settings->npc_show.text;
+			return DecideSkip(settings->npc_show.text, a_name);
 		}
 	case RE::FormType::Door:
 		return settings->door_show.text;
@@ -59,6 +71,10 @@ std::string GetFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_
 		return settings->key_show.text;
 	default:
 		const auto a_formID = a_baseObject->GetFormID();
+
+#ifdef _DEBUG
+		clogger->Print("FormID: %s", SPDLOG_BUF_TO_STRING(a_formID).c_str());
+#endif
 
 		if (a_formID == 15) {
 			return settings->money_show.text;
