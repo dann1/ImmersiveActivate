@@ -78,25 +78,25 @@ bool Settings::LoadSettings()
 	//Name Replacers
 	const char* section = "Display Replacers";
 
-	get_value(npc_show.text, section, "NPCs", ";Hide NPC name and show generic prompt");
-	get_value(npc_dead_show.text, section, "NPCsCorpses", ";Hide NPC name and show generic prompt when NPC is dead. Takes priorty over other NPC name replacers");
-	get_value(npc_child_show.text, section, "NPCsChildren", ";Hide NPC name and show generic prompt when NPC is a child");
-	get_value(npc_animal_show.text, section, "NPCsAnimals", ";Hide NPC name and show generic prompt when NPC is an Animal");
-	get_value(door_show.text, section, "Doors", ";Hide cell name the door leads to and shows generic promt");
-	get_value(container_show.text, section, "Containers", ";Hide container name and shows generic prompt");
-	get_value(resource_show.text, section, "Flora", ";Hide Flora and Plant name and show generic prompt");
-	get_value(ingredient_show.text, section, "Ingredients", ";Hide Ingredient name and show generic prompt");
 	get_value(alchemy_item_show.text, section, "Alchemical Items", ";Hide Potion and Poison name and show generic prompt");
 	get_value(ammo_show.text, section, "Ammunition", ";Hide Ammo name and show generic prompt");
-	get_value(weapon_show.text, section, "Weapons", ";Hide Weapon name and show generic prompt");
 	get_value(armor_show.text, section, "Armors", ";Hide Armor name and show generic prompt");
-	get_value(jewelry_show.text, section, "Jewels", ";Hide Jewelry item name and show generic prompt");
-	get_value(scroll_note_show.text, section, "Scrolls & Notes", ";Hide Scroll and Note name and show generic prompt");
 	get_value(book_show.text, section, "Books", ";Hide Book name and show generic prompt");
-	get_value(soulgem_show.text, section, "Soulgems", ";Hide Soulgem name and show generic prompt");
+	get_value(container_show.text, section, "Containers", ";Hide container name and shows generic prompt");
+	get_value(door_show.text, section, "Doors", ";Hide cell name the door leads to and shows generic promt");
+	get_value(ingredient_show.text, section, "Ingredients", ";Hide Ingredient name and show generic prompt");
+	get_value(item_show.text, section, "Various Items", ";Hide names of the rest of the non-specified items and show generic prompt");
+	get_value(jewelry_show.text, section, "Jewels", ";Hide Jewelry item name and show generic prompt");
 	get_value(key_show.text, section, "Keys", ";Hide Key name and show generic prompt");
 	get_value(money_show.text, section, "Money", ";Hide Septims (FormID 0F in Hexadecimal) and show generic prompt");
-	get_value(item_show.text, section, "Various Items", ";Hide names of the rest of the non-specified items and show generic prompt");
+	get_value(npc_animal_show.text, section, "NPCsAnimals", ";Hide NPC name and show generic prompt when NPC is an Animal");
+	get_value(npc_child_show.text, section, "NPCsChildren", ";Hide NPC name and show generic prompt when NPC is a child");
+	get_value(npc_dead_show.text, section, "NPCsCorpses", ";Hide NPC name and show generic prompt when NPC is dead. Takes priorty over other NPC name replacers");
+	get_value(npc_show.text, section, "NPCs", ";Hide NPC name and show generic prompt");
+	get_value(resource_show.text, section, "Flora", ";Hide Flora and Plant name and show generic prompt");
+	get_value(scroll_note_show.text, section, "Scrolls & Notes", ";Hide Scroll and Note name and show generic prompt");
+	get_value(soulgem_show.text, section, "Soulgems", ";Hide Soulgem name and show generic prompt");
+	get_value(weapon_show.text, section, "Weapons", ";Hide Weapon name and show generic prompt");
 
 	(void)ini.SaveFile(path);
 
