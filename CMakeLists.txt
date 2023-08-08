@@ -218,7 +218,17 @@ endif()
 # ---- Post build ----
 
 if (COPY_BUILD)
-	if (DEFINED SkyrimPath)
+	if(DEFINED ENV{SkyrimModsPath})
+		set_from_environment(SkyrimModsPath)
+		string(CONCAT DST ${SkyrimModsPath}/${PROJECT_NAME}/SKSE/Plugins/)
+
+		add_custom_command(
+			TARGET ${PROJECT_NAME}
+			POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> ${DST}
+			COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_PDB_FILE:${PROJECT_NAME}> ${DST}
+		)
+	elseif (DEFINED SkyrimPath)
 		add_custom_command(
 			TARGET ${PROJECT_NAME}
 			POST_BUILD
