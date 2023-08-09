@@ -15,7 +15,8 @@ std::string ReplaceRefText(const std::string& original, const std::string& repla
 	while (std::getline(ss, line, '\n')) {
 		if (line_count == 1) {  // If it's the second line, replace it
 			lines.push_back(replacement);
-		} else {
+		}
+		else {
 			lines.push_back(line);
 		}
 		line_count++;
@@ -41,36 +42,58 @@ std::string DecideSkip(std::string a_setting_value, std::string a_text)
 	return ReplaceRefText(a_text, a_setting_value);
 }
 
+struct SpecialForms {
+	const std::uint32_t septim = 0xF;
+	const std::uint32_t skooma = 0x00057A7A;
+	const std::uint32_t skoomaRedWater = 0x0201391D;
+};
+
+struct Weapons {
+	const std::vector<std::string> blades = { "WeapTypeSword", "", "WeapTypeGreatsword", "WeapTypeDagger" };
+	const std::vector<std::string> axes = { "WeapTypeWarAxe", "WeapTypeBattleaxe" };
+	const std::vector<std::string> bludgeons = { "WeapTypeMace", "WeapTypeWarhammer" };
+};
+
+struct Consumables {
+	const std::vector<std::string> vials = { "VendorItemPotion", "VendorItemPoison" };
+};
+
 
 std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_text)
 {
+	const auto settings = Settings::GetSingleton();
+
 	const auto a_baseObject = a_object->GetBaseObject();
 	const auto a_formType = a_baseObject->GetFormType();
-	const auto settings = Settings::GetSingleton();
+	const auto a_baseFormID = a_baseObject->GetFormID();
 
 #ifdef _DEBUG
 	auto clogger = RE::ConsoleLog::GetSingleton();
 
 	clogger->Print("------------------------ Immersive Activate Debugging");
-	clogger->Print("FormType: %s", SPDLOG_BUF_TO_STRING(a_formType).c_str());
 	clogger->Print("------------- Original Name Start -------------------");
 	clogger->Print(SPDLOG_BUF_TO_STRING(a_text).c_str());
 	clogger->Print("------------- Original Name End ---------------------");
+	clogger->Print("FormID: %s", SPDLOG_BUF_TO_STRING(a_baseFormID).c_str());
+	clogger->Print("FormType: %s", SPDLOG_BUF_TO_STRING(a_formType).c_str());
 #endif
-
-	// Keyword Grouping
-	std::vector<std::string> vials = { "VendorItemPotion", "VendorItemPoison" };
+	SpecialForms spec;
+	Weapons weap;
+	Consumables cons;
 
 	switch (a_formType) {
 	case RE::FormType::NPC:
 	case RE::FormType::LeveledNPC:
 		if (a_object->IsDead()) {
 			return ReplaceRefText(a_text, settings->npc_dead_show.text);
-		} else if (a_object->IsAnimal()) {
+		}
+		else if (a_object->IsAnimal()) {
 			return ReplaceRefText(a_text, settings->npc_animal_show.text);
-		} else if (a_object->IsChild()) {
+		}
+		else if (a_object->IsChild()) {
 			return DecideSkip(settings->npc_child_show.text, a_text);
-		} else if (a_object->IsDragon()) {
+		}
+		else if (a_object->IsDragon()) {
 			return ReplaceRefText(a_text, "Dragon");
 		}
 		return DecideSkip(settings->npc_show.text, a_text);
@@ -86,18 +109,48 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 		return ReplaceRefText(a_text, settings->resource_show.text);
 	case RE::FormType::Ingredient:
 		return ReplaceRefText(a_text, settings->ingredient_show.text);
-	case RE::FormType::AlchemyItem: // TODO: Detect Skooma like vial as well
-		if (a_baseObject->HasAnyKeywordByEditorID(vials)) {
-			return ReplaceRefText(a_text, "Vial");
+	case RE::FormType::AlchemyItem:
+		if (a_baseObject->HasAnyKeywordByEditorID(cons.vials) || a_baseFormID == spec.skooma || a_baseFormID == spec.skoomaRedWater) {
+			return ReplaceRefText(a_text, "Flask");
 		}
 		return ReplaceRefText(a_text, settings->alchemy_item_show.text);
 	case RE::FormType::Ammo:
 		return ReplaceRefText(a_text, settings->ammo_show.text);
 	case RE::FormType::Weapon:
+		if (a_baseObject->HasAnyKeywordByEditorID(weap.blades)) {
+			return ReplaceRefText(a_text, "Blade");
+		}
+		else if (a_baseObject->HasAnyKeywordByEditorID(weap.axes)) {
+			return ReplaceRefText(a_text, "Axe");
+		}
+		else if (a_baseObject->HasAnyKeywordByEditorID(weap.bludgeons)) {
+			return ReplaceRefText(a_text, "Bludgeon");
+		}
+		else if (a_baseObject->HasAnyKeywordByEditorID({ "WeapTypeStaff" })) {
+			return ReplaceRefText(a_text, "Staff");
+		}
 		return ReplaceRefText(a_text, settings->weapon_show.text);
 	case RE::FormType::Armor:
 		if (a_object->IsJewelry()) {
 			return ReplaceRefText(a_text, settings->jewelry_show.text);
+		}
+		else if (a_baseObject->HasAnyKeywordByEditorID({ "ArmorHelmet" })) {
+			return ReplaceRefText(a_text, "Helmet");
+		}
+		else if (a_baseObject->HasAnyKeywordByEditorID({ "ArmorBoots" })) {
+			return ReplaceRefText(a_text, "Boots");
+		}
+		else if (a_baseObject->HasAnyKeywordByEditorID({ "ArmorGauntlets" })) {
+			return ReplaceRefText(a_text, "Gauntlets");
+		}
+		else if (a_baseObject->HasAnyKeywordByEditorID({ "ArmorCuirass" })) {
+			return ReplaceRefText(a_text, "Cuirass");
+		}
+		else if (a_baseObject->HasAnyKeywordByEditorID({ "ArmorShield" })) {
+			return ReplaceRefText(a_text, "Shield");
+		}
+		else if (a_baseObject->HasAnyKeywordByEditorID({ "ArmorClothing" })) {
+			return ReplaceRefText(a_text, "Clothes");
 		}
 		return ReplaceRefText(a_text, settings->armor_show.text);
 	case RE::FormType::Scroll:
@@ -110,15 +163,25 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 	case RE::FormType::KeyMaster:
 		return ReplaceRefText(a_text, settings->key_show.text);
 	default:
-		const auto a_formID = a_baseObject->GetFormID();
-
-#ifdef _DEBUG
-		clogger->Print("FormID: %s", SPDLOG_BUF_TO_STRING(a_formID).c_str());
-#endif
-
-		if (a_formID == 15) {
+		if (a_baseFormID == spec.septim) {
 			return ReplaceRefText(a_text, settings->money_show.text);
-		} else if (a_object->IsLockpick()) {
+		}
+		else if (a_baseObject->HasAnyKeywordByEditorID({ "VendorItemGem" })) {
+			return ReplaceRefText(a_text, "Gem");
+		}
+		else if (a_baseObject->HasAnyKeywordByEditorID({ "VendorItemOreIngot" })) {
+			return ReplaceRefText(a_text, "Metal");
+		}
+		else if (a_baseObject->HasAnyKeywordByEditorID({ "VendorItemAnimalHide" })) {
+			return ReplaceRefText(a_text, "Leather");
+		}
+		else if (a_baseObject->HasAnyKeywordByEditorID({ "VendorItemAnimalPart" })) {
+			return ReplaceRefText(a_text, "Remains");
+		}
+		else if (a_baseObject->HasAnyKeywordByEditorID({ "VendorItemBardInstrument" })) {
+			return ReplaceRefText(a_text, "Instrument");
+		}
+		else if (a_object->IsLockpick()) {
 			return ReplaceRefText(a_text, "Lockpick");
 		}
 		return ReplaceRefText(a_text, settings->item_show.text);
