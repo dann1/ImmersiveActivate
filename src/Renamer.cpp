@@ -41,46 +41,6 @@ std::string DecideSkip(std::string a_setting_value, std::string a_text)
 	return ReplaceRefText(a_text, a_setting_value);
 }
 
-bool HasKeywordByEditorID(const RE::TESObjectREFRPtr& a_objectPtr, const char* editorID)
-{
-	if (!a_objectPtr) {
-		return false;
-	}
-
-	// Get the object from the smart pointer
-	auto a_object = a_objectPtr.get();
-	if (!a_object) {
-		return false;
-	}
-
-	// Get the base object that might contain the keywords
-	auto baseObject = a_object->GetBaseObject();
-	if (!baseObject) {
-		return false;
-	}
-
-	// Try to cast to a keyword form interface
-	auto keywordForm = baseObject->As<RE::BGSKeywordForm>();
-	if (!keywordForm) {
-		return false;
-	}
-
-	// Iterate through the keywords
-	for (std::uint32_t i = 0; i < keywordForm->GetNumKeywords(); ++i) {
-		auto keywordOpt = keywordForm->GetKeywordAt(i);
-		if (keywordOpt) {
-			auto keyword = *keywordOpt;
-			if (keyword) {
-				const char* keywordEditorID = keyword->GetFormEditorID();
-				if (keywordEditorID && std::strcmp(keywordEditorID, editorID) == 0) {
-					return true;
-				}
-			}
-		}
-	}
-
-	return false;
-}
 
 std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_text)
 {
@@ -93,10 +53,13 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 
 	clogger->Print("------------------------ Immersive Activate Debugging");
 	clogger->Print("FormType: %s", SPDLOG_BUF_TO_STRING(a_formType).c_str());
-	clogger->Print("------------------- Original Name -------------------");
+	clogger->Print("------------- Original Name Start -------------------");
 	clogger->Print(SPDLOG_BUF_TO_STRING(a_text).c_str());
-	clogger->Print("------------------- Original Name -------------------");
+	clogger->Print("------------- Original Name End ---------------------");
 #endif
+
+	// Keyword Grouping
+	std::vector<std::string> vials = { "VendorItemPotion", "VendorItemPoison" };
 
 	switch (a_formType) {
 	case RE::FormType::NPC:
@@ -109,9 +72,8 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 			return DecideSkip(settings->npc_child_show.text, a_text);
 		} else if (a_object->IsDragon()) {
 			return ReplaceRefText(a_text, "Dragon");
-		} else {
-			return DecideSkip(settings->npc_show.text, a_text);
 		}
+		return DecideSkip(settings->npc_show.text, a_text);
 	case RE::FormType::Door:
 		return ReplaceRefText(a_text, settings->door_show.text);
 	case RE::FormType::Activator:
@@ -124,13 +86,11 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 		return ReplaceRefText(a_text, settings->resource_show.text);
 	case RE::FormType::Ingredient:
 		return ReplaceRefText(a_text, settings->ingredient_show.text);
-	case RE::FormType::AlchemyItem:
-		if (HasKeywordByEditorID(a_object, "VendorItemPotion")) {
+	case RE::FormType::AlchemyItem: // TODO: Detect Skooma like vial as well
+		if (a_baseObject->HasAnyKeywordByEditorID(vials)) {
 			return ReplaceRefText(a_text, "Vial");
-
-		} else {
-			return ReplaceRefText(a_text, settings->alchemy_item_show.text);
 		}
+		return ReplaceRefText(a_text, settings->alchemy_item_show.text);
 	case RE::FormType::Ammo:
 		return ReplaceRefText(a_text, settings->ammo_show.text);
 	case RE::FormType::Weapon:
@@ -138,9 +98,8 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 	case RE::FormType::Armor:
 		if (a_object->IsJewelry()) {
 			return ReplaceRefText(a_text, settings->jewelry_show.text);
-		} else {
-			return ReplaceRefText(a_text, settings->armor_show.text);
 		}
+		return ReplaceRefText(a_text, settings->armor_show.text);
 	case RE::FormType::Scroll:
 	case RE::FormType::Note:
 		return ReplaceRefText(a_text, settings->scroll_note_show.text);
@@ -161,8 +120,7 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 			return ReplaceRefText(a_text, settings->money_show.text);
 		} else if (a_object->IsLockpick()) {
 			return ReplaceRefText(a_text, "Lockpick");
-		} else {
-			return ReplaceRefText(a_text, settings->item_show.text);
 		}
+		return ReplaceRefText(a_text, settings->item_show.text);
 	}
 }
