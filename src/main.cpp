@@ -1,6 +1,6 @@
-#include "Settings.h"
 #include "Manager.h"
 #include "Renamer.h"
+#include "Settings.h"
 
 void MessageHandler(SKSE::MessagingInterface::Message* a_message)
 {
@@ -57,8 +57,13 @@ void InitializeLog()
 
 	auto log = std::make_shared<spdlog::logger>("global log"s, std::move(sink));
 
+#ifdef _DEBUG
+	log->set_level(spdlog::level::debug);
+	log->flush_on(spdlog::level::debug);
+#else
 	log->set_level(spdlog::level::info);
 	log->flush_on(spdlog::level::info);
+#endif
 
 	spdlog::set_default_logger(std::move(log));
 	spdlog::set_pattern("[%l] %v"s);
@@ -71,6 +76,12 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 	InitializeLog();
 
 	logger::info("Game version : {}", a_skse->RuntimeVersion().string());
+	
+#ifdef _DEBUG
+	logger::info("Using Debug build");
+#else
+	logger::info("Using Release build");
+#endif
 
 	SKSE::Init(a_skse);
 

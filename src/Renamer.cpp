@@ -71,15 +71,21 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 	auto clogger = RE::ConsoleLog::GetSingleton();
 
 	clogger->Print("------------------------ Immersive Activate Debugging");
+	clogger->Print("FormID: %s", SPDLOG_BUF_TO_STRING(a_baseFormID).c_str());
+	clogger->Print("FormType: %s", SPDLOG_BUF_TO_STRING(a_formType).c_str());
 	clogger->Print("------------- Original Name Start -------------------");
 	clogger->Print(SPDLOG_BUF_TO_STRING(a_text).c_str());
 	clogger->Print("------------- Original Name End ---------------------");
-	clogger->Print("FormID: %s", SPDLOG_BUF_TO_STRING(a_baseFormID).c_str());
-	clogger->Print("FormType: %s", SPDLOG_BUF_TO_STRING(a_formType).c_str());
+
+	logger::debug("FormID: {}", a_baseFormID);
+	logger::debug("FormType: {}", a_formType);
+	logger::debug("------------- Original Name Start -------------------");
+	logger::debug("{}", a_text);
+	logger::debug("------------- Original Name End ---------------------");
 #endif
 	SpecialForms spec;
-	Weapons weap;
 	Consumables cons;
+	Weapons weap;
 
 	switch (a_formType) {
 	case RE::FormType::NPC:
