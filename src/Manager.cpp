@@ -53,7 +53,7 @@ namespace UI
 								data->type = RE::HUDData::Type::kActivateNoLabel;
 							}
 							const std::string origText = data->text.c_str();
-							std::string newText = ReplaceFormTypeText(crossHairRef, origText);
+							std::string newText = ReplaceFormTypeText(crossHairRef, origText, settings);
 
 							if (const auto colorSettings = settings->GetColor(crossHairRef, origText); colorSettings && colorSettings->useColoredName) {
 								if (auto splitText = string::split(newText, "\n"); splitText.size() > 1 && !colorSettings->nameColor.empty()) {

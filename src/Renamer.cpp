@@ -63,6 +63,8 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 {
 	const auto settings = Settings::GetSingleton();
 
+std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_text, const Settings* settings)
+{
 	const auto a_baseObject = a_object->GetBaseObject();
 	const auto a_formType = a_baseObject->GetFormType();
 	const auto a_baseFormID = a_baseObject->GetFormID();
