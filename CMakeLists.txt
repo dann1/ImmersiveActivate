@@ -237,7 +237,7 @@ if (COPY_BUILD)
 		)
 	else ()
 		message(
-			WARNING
+			STATUS
 			"Variable ${SkyrimPath} is not defined. Skipping post-build copy command."
 		)
 	endif ()
