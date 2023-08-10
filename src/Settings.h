@@ -3,7 +3,7 @@
 class Settings
 {
 public:
-    struct Text
+	struct Text
 	{
 		std::string type;
 		bool hideAll;
@@ -47,7 +47,7 @@ public:
 		std::string text;
 		explicit Replacer(std::string a_replace) :
 			text(std::move(a_replace))
-			{}
+		{}
 	};
 
 	[[nodiscard]] static Settings* GetSingleton()
@@ -61,10 +61,50 @@ public:
 	const Text* GetText(RE::FormType a_formType) const;
 	const Text* GetText(const RE::TESObjectREFRPtr& a_object) const;
 
-
-
-    const Color* GetColor(const RE::TESObjectREFRPtr& a_object, std::string_view a_text) const;
+	const Color* GetColor(const RE::TESObjectREFRPtr& a_object, std::string_view a_text) const;
 	const Tag* GetTag(const RE::TESObjectREFRPtr& a_object) const;
+
+	Replacer rAmmo{ "Ammunition" };
+	Replacer rArmor{ "Equipment" };
+	Replacer rArmorChest{ "Cuirass" };
+	Replacer rArmorCloth{ "Clothing" };
+	Replacer rArmorFeet{ "Boots" };
+	Replacer rArmorHands{ "Gauntlets" };
+	Replacer rArmorHead{ "Helmet" };
+	Replacer rArmorShield{ "Shield" };
+	Replacer rBook{ "Book" };
+	Replacer rConsumable{ "Provision" };
+	Replacer rConsumableAlchemy{ "Flask" };
+	Replacer rContainer{ "Storage" };
+	Replacer rDoor{ "Door" };
+	Replacer rIngredient{ "Reagent" };
+	Replacer rJewel{ "Jewel" };
+	Replacer rJewelFinger{ "Ring" };
+	Replacer rJewelHead{ "Circlet" };
+	Replacer rJewelNeck{ "Necklace" };
+	Replacer rKey{ "Key" };
+	Replacer rMisc{ "Item" };
+	Replacer rMiscBard{ "Instrument" };
+	Replacer rMiscGem{ "Gem" };
+	Replacer rMiscLockpick{ "Lockpick" };
+	Replacer rMiscOre{ "Metal" };
+	Replacer rMiscRemain{ "Remains" };
+	Replacer rMiscSkin{ "Leather" };
+	Replacer rMoney{ "Money" };
+	Replacer rNPC{ "Person" };
+	Replacer rNPCAnimal{ "Animal" };
+	Replacer rNPCChild{ "Child" };
+	Replacer rNPCCorpse{ "Corpse" };
+	Replacer rNPCDragon{ "Dragon" };
+	Replacer rPaper{ "Document" };
+	Replacer rResource{ "Resource" };
+	Replacer rWeapon{ "Weapon" };
+	Replacer rWeaponAxe{ "Axe" };
+	Replacer rWeaponBlade{ "Blade" };
+	Replacer rWeaponBlunt{ "Bludgeon" };
+	Replacer rWeaponBow{ "Bow" };
+	Replacer rWeaponCrossbow{ "Crossbow" };
+	Replacer rWeaponStaff{ "Staff" };
 
 private:
 	struct detail
@@ -92,7 +132,7 @@ private:
 	};
 
 	Text activators{ "Activators" };
-    Text containers{ "Containers" };
+	Text containers{ "Containers" };
 	Text doors{ "Doors" };
 	Text furniture{ "Furniture" };
 	Text flora{ "Flora" };
@@ -100,28 +140,6 @@ private:
 	Text npc{ "NPCs" };
 	Text projectiles{ "Projectiles" };
 
-public:
-	Replacer alchemy_item_show{ "Provision" };
-	Replacer ammo_show{ "Ammunition" };
-	Replacer armor_show{ "Equipment" };
-	Replacer book_show{ "Book" };
-	Replacer container_show{ "Storage" };
-	Replacer door_show{ "Door" };
-	Replacer ingredient_show{ "Reagent" };
-	Replacer item_show{ "Item" };
-	Replacer jewelry_show{ "Jewel" };
-	Replacer key_show{ "Key" };
-	Replacer money_show{ "Money" };
-	Replacer npc_animal_show{ "Animal" };
-	Replacer npc_child_show{ "Child" };
-	Replacer npc_dead_show{ "Corpse" };
-	Replacer npc_show{ "Person" };
-	Replacer resource_show{ "Resource" };
-	Replacer scroll_note_show{ "Document" };
-	Replacer gem{ "Gem" };
-	Replacer weapon_show{ "Weapon" };
-
-private:
 	Color steal{ "#FF0000" };
 	Color owned{ "#FFFF00" };
 
