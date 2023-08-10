@@ -15,8 +15,7 @@ std::string ReplaceRefText(const std::string& original, const std::string& repla
 	while (std::getline(ss, line, '\n')) {
 		if (line_count == 1) {  // If it's the second line, replace it
 			lines.push_back(replacement);
-		}
-		else {
+		} else {
 			lines.push_back(line);
 		}
 		line_count++;
@@ -42,26 +41,53 @@ std::string DecideSkip(std::string a_setting_value, std::string a_text)
 	return ReplaceRefText(a_text, a_setting_value);
 }
 
-struct SpecialForms {
-	const std::uint32_t septim = 0xF;
-	const std::uint32_t skooma = 0x00057A7A;
-	const std::uint32_t skoomaRedWater = 0x0201391D;
-};
-
-struct Weapons {
-	const std::vector<std::string> blades = { "WeapTypeSword", "", "WeapTypeGreatsword", "WeapTypeDagger" };
+struct Weapons
+{
+	const std::vector<std::string> blades = { "WeapTypeSword", "WeapTypeGreatsword", "WeapTypeDagger" };
 	const std::vector<std::string> axes = { "WeapTypeWarAxe", "WeapTypeBattleaxe" };
 	const std::vector<std::string> bludgeons = { "WeapTypeMace", "WeapTypeWarhammer" };
+	const std::vector<std::string> staffs = { "WeapTypeStaff" };
 };
 
-struct Consumables {
-	const std::vector<std::string> vials = { "VendorItemPotion", "VendorItemPoison" };
-};
-
-
-std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_text)
+struct Armors
 {
-	const auto settings = Settings::GetSingleton();
+	const std::vector<std::string> head = { "ArmorHelmet" };
+	const std::vector<std::string> chest = { "ArmorCuirass" };
+	const std::vector<std::string> hands = { "ArmorGauntlets" };
+	const std::vector<std::string> feet = { "ArmorBoots" };
+	const std::vector<std::string> shield = { "ArmorShield" };
+	const std::vector<std::string> cloth = { "ArmorClothing" };
+};
+
+struct Flasks
+{
+	const std::uint32_t skooma = 0x00057A7A;
+	const std::uint32_t skoomaRedWater = 0x0201391D;
+	const std::vector<std::string> flasks = { "VendorItemPotion", "VendorItemPoison" };
+};
+
+struct Jewels
+{
+	const std::vector<std::string> rings = { "ClothingRing" };
+	const std::vector<std::string> necklaces = { "ClothingNecklace" };
+	const std::vector<std::string> circlets = { "ClothingCirclet" };
+};
+
+
+struct Books
+{
+	const std::uint32_t bookBurnt = 0x000E3CB7;
+};
+
+struct Misc
+{
+	const std::vector<std::string> gems = { "VendorItemGem", "VendorItemSoulGem" };
+	const std::vector<std::string> metals = { "VendorItemOreIngot" };
+	const std::vector<std::string> leather = { "VendorItemAnimalHide" };
+	const std::vector<std::string> remains = { "VendorItemAnimalPart" };
+	const std::vector<std::string> instruments = { "VendorItemBardInstrument" };
+
+};
 
 std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_text, const Settings* settings)
 {
@@ -85,23 +111,24 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 	logger::debug("{}", a_text);
 	logger::debug("------------- Original Name End ---------------------");
 #endif
-	SpecialForms spec;
-	Consumables cons;
-	Weapons weap;
+
+	Flasks flasks;
+	Weapons weapons;
+	Books books;
+	Jewels jewels;
+	Armors armors;
+	Misc misc;
 
 	switch (a_formType) {
 	case RE::FormType::NPC:
 	case RE::FormType::LeveledNPC:
 		if (a_object->IsDead()) {
 			return ReplaceRefText(a_text, settings->npc_dead_show.text);
-		}
-		else if (a_object->IsAnimal()) {
+		} else if (a_object->IsAnimal()) {
 			return ReplaceRefText(a_text, settings->npc_animal_show.text);
-		}
-		else if (a_object->IsChild()) {
+		} else if (a_object->IsChild()) {
 			return DecideSkip(settings->npc_child_show.text, a_text);
-		}
-		else if (a_object->IsDragon()) {
+		} else if (a_object->IsDragon()) {
 			return ReplaceRefText(a_text, "Dragon");
 		}
 		return DecideSkip(settings->npc_show.text, a_text);
@@ -118,46 +145,53 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 	case RE::FormType::Ingredient:
 		return ReplaceRefText(a_text, settings->ingredient_show.text);
 	case RE::FormType::AlchemyItem:
-		if (a_baseObject->HasAnyKeywordByEditorID(cons.vials) || a_baseFormID == spec.skooma || a_baseFormID == spec.skoomaRedWater) {
+		if (a_baseObject->HasAnyKeywordByEditorID(flasks.flasks) || a_baseFormID == flasks.skooma || a_baseFormID == flasks.skoomaRedWater) {
 			return ReplaceRefText(a_text, "Flask");
 		}
 		return ReplaceRefText(a_text, settings->alchemy_item_show.text);
 	case RE::FormType::Ammo:
 		return ReplaceRefText(a_text, settings->ammo_show.text);
 	case RE::FormType::Weapon:
-		if (a_baseObject->HasAnyKeywordByEditorID(weap.blades)) {
+		if (a_baseObject->HasAnyKeywordByEditorID(weapons.blades)) {
 			return ReplaceRefText(a_text, "Blade");
-		}
-		else if (a_baseObject->HasAnyKeywordByEditorID(weap.axes)) {
+		} else if (a_baseObject->HasAnyKeywordByEditorID(weapons.axes)) {
 			return ReplaceRefText(a_text, "Axe");
-		}
-		else if (a_baseObject->HasAnyKeywordByEditorID(weap.bludgeons)) {
+		} else if (a_baseObject->HasAnyKeywordByEditorID(weapons.bludgeons)) {
 			return ReplaceRefText(a_text, "Bludgeon");
-		}
-		else if (a_baseObject->HasAnyKeywordByEditorID({ "WeapTypeStaff" })) {
+		} else if (a_baseObject->HasAnyKeywordByEditorID(weapons.staffs)) {
+			return ReplaceRefText(a_text, "Staff");
+		} else if (a_baseObject->HasAnyKeywordByEditorID({ "WeapTypeBow" })) {
+			auto a_baseWeapon = a_baseObject->As<RE::TESObjectWEAP>();
+			if (a_baseWeapon->IsCrossbow()) {
+				return ReplaceRefText(a_text, "Crossbow");
+
+			} else if (a_baseWeapon->IsBow()) {
+				return ReplaceRefText(a_text, "Bow");
+			}
 			return ReplaceRefText(a_text, "Staff");
 		}
 		return ReplaceRefText(a_text, settings->weapon_show.text);
 	case RE::FormType::Armor:
 		if (a_object->IsJewelry()) {
+			if (a_baseObject->HasAnyKeywordByEditorID(jewels.rings)) {
+				return ReplaceRefText(a_text, "Ring");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(jewels.necklaces)) {
+				return ReplaceRefText(a_text, "Necklace");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(jewels.circlets)) {
+				return ReplaceRefText(a_text, "Circlet");
+			}
 			return ReplaceRefText(a_text, settings->jewelry_show.text);
-		}
-		else if (a_baseObject->HasAnyKeywordByEditorID({ "ArmorHelmet" })) {
+		} else if (a_baseObject->HasAnyKeywordByEditorID(armors.head)) {
 			return ReplaceRefText(a_text, "Helmet");
-		}
-		else if (a_baseObject->HasAnyKeywordByEditorID({ "ArmorBoots" })) {
+		} else if (a_baseObject->HasAnyKeywordByEditorID(armors.feet)) {
 			return ReplaceRefText(a_text, "Boots");
-		}
-		else if (a_baseObject->HasAnyKeywordByEditorID({ "ArmorGauntlets" })) {
+		} else if (a_baseObject->HasAnyKeywordByEditorID(armors.hands)) {
 			return ReplaceRefText(a_text, "Gauntlets");
-		}
-		else if (a_baseObject->HasAnyKeywordByEditorID({ "ArmorCuirass" })) {
+		} else if (a_baseObject->HasAnyKeywordByEditorID(armors.chest)) {
 			return ReplaceRefText(a_text, "Cuirass");
-		}
-		else if (a_baseObject->HasAnyKeywordByEditorID({ "ArmorShield" })) {
+		} else if (a_baseObject->HasAnyKeywordByEditorID(armors.shield)) {
 			return ReplaceRefText(a_text, "Shield");
-		}
-		else if (a_baseObject->HasAnyKeywordByEditorID({ "ArmorClothing" })) {
+		} else if (a_baseObject->HasAnyKeywordByEditorID(armors.head)) {
 			return ReplaceRefText(a_text, "Clothes");
 		}
 		return ReplaceRefText(a_text, settings->armor_show.text);
@@ -166,30 +200,24 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 		return ReplaceRefText(a_text, settings->scroll_note_show.text);
 	case RE::FormType::Book:
 		return ReplaceRefText(a_text, settings->book_show.text);
-	case RE::FormType::SoulGem:
-		return ReplaceRefText(a_text, settings->soulgem_show.text);
 	case RE::FormType::KeyMaster:
 		return ReplaceRefText(a_text, settings->key_show.text);
 	default:
-		if (a_baseFormID == spec.septim) {
+		if (a_baseFormID == 0xF) {
 			return ReplaceRefText(a_text, settings->money_show.text);
-		}
-		else if (a_baseObject->HasAnyKeywordByEditorID({ "VendorItemGem" })) {
-			return ReplaceRefText(a_text, "Gem");
-		}
-		else if (a_baseObject->HasAnyKeywordByEditorID({ "VendorItemOreIngot" })) {
+		} else if (a_baseObject->HasAnyKeywordByEditorID(misc.gems)) {
+			return ReplaceRefText(a_text, settings->gem.text);
+		} else if (a_baseObject->HasAnyKeywordByEditorID(misc.metals)) {
 			return ReplaceRefText(a_text, "Metal");
-		}
-		else if (a_baseObject->HasAnyKeywordByEditorID({ "VendorItemAnimalHide" })) {
-			return ReplaceRefText(a_text, "Leather");
-		}
-		else if (a_baseObject->HasAnyKeywordByEditorID({ "VendorItemAnimalPart" })) {
+		} else if (a_baseObject->HasAnyKeywordByEditorID(misc.remains)) {
 			return ReplaceRefText(a_text, "Remains");
-		}
-		else if (a_baseObject->HasAnyKeywordByEditorID({ "VendorItemBardInstrument" })) {
+		} else if (a_baseObject->HasAnyKeywordByEditorID(misc.leather)) {
+			return ReplaceRefText(a_text, "Leather");
+		} else if (a_baseObject->HasAnyKeywordByEditorID(misc.instruments)) {
 			return ReplaceRefText(a_text, "Instrument");
-		}
-		else if (a_object->IsLockpick()) {
+		} else if (a_baseFormID == books.bookBurnt) {
+			return ReplaceRefText(a_text, settings->book_show.text);
+		} else if (a_object->IsLockpick()) {
 			return ReplaceRefText(a_text, "Lockpick");
 		}
 		return ReplaceRefText(a_text, settings->item_show.text);

@@ -95,7 +95,7 @@ bool Settings::LoadSettings()
 	get_value(npc_show.text, section, "NPCs", ";Hide NPC name and show generic prompt");
 	get_value(resource_show.text, section, "Flora", ";Hide Flora and Plant name and show generic prompt");
 	get_value(scroll_note_show.text, section, "Scrolls & Notes", ";Hide Scroll and Note name and show generic prompt");
-	get_value(soulgem_show.text, section, "Soulgems", ";Hide Soulgem name and show generic prompt");
+	get_value(gem.text, section, "Gems", ";Hide Gem name and show generic prompt");
 	get_value(weapon_show.text, section, "Weapons", ";Hide Weapon name and show generic prompt");
 
 	(void)ini.SaveFile(path);

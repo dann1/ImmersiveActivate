@@ -118,7 +118,7 @@ public:
 	Replacer npc_show{ "Person" };
 	Replacer resource_show{ "Resource" };
 	Replacer scroll_note_show{ "Document" };
-	Replacer soulgem_show{ "Gem" };
+	Replacer gem{ "Gem" };
 	Replacer weapon_show{ "Weapon" };
 
 private:
