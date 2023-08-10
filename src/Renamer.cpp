@@ -73,7 +73,6 @@ struct Jewels
 	const std::vector<std::string> circlets = { "ClothingCirclet" };
 };
 
-
 struct Books
 {
 	const std::uint32_t bookBurnt = 0x000E3CB7;
@@ -86,7 +85,6 @@ struct Misc
 	const std::vector<std::string> leather = { "VendorItemAnimalHide" };
 	const std::vector<std::string> remains = { "VendorItemAnimalPart" };
 	const std::vector<std::string> instruments = { "VendorItemBardInstrument" };
-
 };
 
 std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_text, const Settings* settings)
@@ -112,12 +110,7 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 	logger::debug("------------- Original Name End ---------------------");
 #endif
 
-	Flasks flasks;
-	Weapons weapons;
 	Books books;
-	Jewels jewels;
-	Armors armors;
-	Misc misc;
 
 	switch (a_formType) {
 	case RE::FormType::NPC:
@@ -145,56 +138,70 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 	case RE::FormType::Ingredient:
 		return ReplaceRefText(a_text, settings->ingredient_show.text);
 	case RE::FormType::AlchemyItem:
-		if (a_baseObject->HasAnyKeywordByEditorID(flasks.flasks) || a_baseFormID == flasks.skooma || a_baseFormID == flasks.skoomaRedWater) {
-			return ReplaceRefText(a_text, "Flask");
+		{
+			Flasks flasks;
+
+			if (a_baseObject->HasAnyKeywordByEditorID(flasks.flasks) || a_baseFormID == flasks.skooma || a_baseFormID == flasks.skoomaRedWater) {
+				return ReplaceRefText(a_text, "Flask");
+			}
+
+			return ReplaceRefText(a_text, settings->alchemy_item_show.text);
 		}
-		return ReplaceRefText(a_text, settings->alchemy_item_show.text);
 	case RE::FormType::Ammo:
 		return ReplaceRefText(a_text, settings->ammo_show.text);
 	case RE::FormType::Weapon:
-		if (a_baseObject->HasAnyKeywordByEditorID(weapons.blades)) {
-			return ReplaceRefText(a_text, "Blade");
-		} else if (a_baseObject->HasAnyKeywordByEditorID(weapons.axes)) {
-			return ReplaceRefText(a_text, "Axe");
-		} else if (a_baseObject->HasAnyKeywordByEditorID(weapons.bludgeons)) {
-			return ReplaceRefText(a_text, "Bludgeon");
-		} else if (a_baseObject->HasAnyKeywordByEditorID(weapons.staffs)) {
-			return ReplaceRefText(a_text, "Staff");
-		} else if (a_baseObject->HasAnyKeywordByEditorID({ "WeapTypeBow" })) {
-			auto a_baseWeapon = a_baseObject->As<RE::TESObjectWEAP>();
-			if (a_baseWeapon->IsCrossbow()) {
-				return ReplaceRefText(a_text, "Crossbow");
+		{
+			Weapons weapons;
 
-			} else if (a_baseWeapon->IsBow()) {
-				return ReplaceRefText(a_text, "Bow");
+			if (a_baseObject->HasAnyKeywordByEditorID(weapons.blades)) {
+				return ReplaceRefText(a_text, "Blade");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(weapons.axes)) {
+				return ReplaceRefText(a_text, "Axe");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(weapons.staffs)) {
+				return ReplaceRefText(a_text, "Staff");  // TODO: Battlestaffs as well
+			} else if (a_baseObject->HasAnyKeywordByEditorID(weapons.bludgeons)) {
+				return ReplaceRefText(a_text, "Bludgeon");
+			} else if (a_baseObject->HasAnyKeywordByEditorID({ "WeapTypeBow" })) {
+				auto a_baseWeapon = a_baseObject->As<RE::TESObjectWEAP>();
+				return a_baseWeapon->IsCrossbow() ? ReplaceRefText(a_text, "Crossbow") : ReplaceRefText(a_text, "Bow");
 			}
-			return ReplaceRefText(a_text, "Staff");
+
+			return ReplaceRefText(a_text, settings->weapon_show.text);
 		}
-		return ReplaceRefText(a_text, settings->weapon_show.text);
 	case RE::FormType::Armor:
-		if (a_object->IsJewelry()) {
-			if (a_baseObject->HasAnyKeywordByEditorID(jewels.rings)) {
-				return ReplaceRefText(a_text, "Ring");
-			} else if (a_baseObject->HasAnyKeywordByEditorID(jewels.necklaces)) {
-				return ReplaceRefText(a_text, "Necklace");
-			} else if (a_baseObject->HasAnyKeywordByEditorID(jewels.circlets)) {
-				return ReplaceRefText(a_text, "Circlet");
+		{
+			if (a_object->IsJewelry()) {
+				Jewels jewels;
+
+				if (a_baseObject->HasAnyKeywordByEditorID(jewels.rings)) {
+					return ReplaceRefText(a_text, "Ring");
+				} else if (a_baseObject->HasAnyKeywordByEditorID(jewels.necklaces)) {
+					return ReplaceRefText(a_text, "Necklace");
+				} else if (a_baseObject->HasAnyKeywordByEditorID(jewels.circlets)) {
+					return ReplaceRefText(a_text, "Circlet");
+				}
+
+				return ReplaceRefText(a_text, settings->jewelry_show.text);
 			}
-			return ReplaceRefText(a_text, settings->jewelry_show.text);
-		} else if (a_baseObject->HasAnyKeywordByEditorID(armors.head)) {
-			return ReplaceRefText(a_text, "Helmet");
-		} else if (a_baseObject->HasAnyKeywordByEditorID(armors.feet)) {
-			return ReplaceRefText(a_text, "Boots");
-		} else if (a_baseObject->HasAnyKeywordByEditorID(armors.hands)) {
-			return ReplaceRefText(a_text, "Gauntlets");
-		} else if (a_baseObject->HasAnyKeywordByEditorID(armors.chest)) {
-			return ReplaceRefText(a_text, "Cuirass");
-		} else if (a_baseObject->HasAnyKeywordByEditorID(armors.shield)) {
-			return ReplaceRefText(a_text, "Shield");
-		} else if (a_baseObject->HasAnyKeywordByEditorID(armors.head)) {
-			return ReplaceRefText(a_text, "Clothes");
+
+			Armors armors;
+
+			if (a_baseObject->HasAnyKeywordByEditorID(armors.head)) {
+				return ReplaceRefText(a_text, "Helmet");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(armors.feet)) {
+				return ReplaceRefText(a_text, "Boots");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(armors.hands)) {
+				return ReplaceRefText(a_text, "Gauntlets");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(armors.chest)) {
+				return ReplaceRefText(a_text, "Cuirass");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(armors.shield)) {
+				return ReplaceRefText(a_text, "Shield");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(armors.head)) {
+				return ReplaceRefText(a_text, "Clothes");
+			}
+
+			return ReplaceRefText(a_text, settings->armor_show.text);
 		}
-		return ReplaceRefText(a_text, settings->armor_show.text);
 	case RE::FormType::Scroll:
 	case RE::FormType::Note:
 		return ReplaceRefText(a_text, settings->scroll_note_show.text);
@@ -203,23 +210,28 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 	case RE::FormType::KeyMaster:
 		return ReplaceRefText(a_text, settings->key_show.text);
 	default:
-		if (a_baseFormID == 0xF) {
-			return ReplaceRefText(a_text, settings->money_show.text);
-		} else if (a_baseObject->HasAnyKeywordByEditorID(misc.gems)) {
-			return ReplaceRefText(a_text, settings->gem.text);
-		} else if (a_baseObject->HasAnyKeywordByEditorID(misc.metals)) {
-			return ReplaceRefText(a_text, "Metal");
-		} else if (a_baseObject->HasAnyKeywordByEditorID(misc.remains)) {
-			return ReplaceRefText(a_text, "Remains");
-		} else if (a_baseObject->HasAnyKeywordByEditorID(misc.leather)) {
-			return ReplaceRefText(a_text, "Leather");
-		} else if (a_baseObject->HasAnyKeywordByEditorID(misc.instruments)) {
-			return ReplaceRefText(a_text, "Instrument");
-		} else if (a_baseFormID == books.bookBurnt) {
-			return ReplaceRefText(a_text, settings->book_show.text);
-		} else if (a_object->IsLockpick()) {
-			return ReplaceRefText(a_text, "Lockpick");
+		{
+			Misc misc;
+
+			if (a_baseFormID == 0xF) {  // Septim
+				return ReplaceRefText(a_text, settings->money_show.text);
+			} else if (a_baseObject->HasAnyKeywordByEditorID(misc.gems)) {
+				return ReplaceRefText(a_text, settings->gem.text);
+			} else if (a_baseObject->HasAnyKeywordByEditorID(misc.metals)) {
+				return ReplaceRefText(a_text, "Metal");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(misc.remains)) {
+				return ReplaceRefText(a_text, "Remains");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(misc.leather)) {
+				return ReplaceRefText(a_text, "Leather");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(misc.instruments)) {
+				return ReplaceRefText(a_text, "Instrument");
+			} else if (a_object->IsLockpick()) {
+				return ReplaceRefText(a_text, "Lockpick");
+			} else if (a_baseFormID == books.bookBurnt) {
+				return ReplaceRefText(a_text, settings->book_show.text);
+			}
 		}
+
 		return ReplaceRefText(a_text, settings->item_show.text);
 	}
 }
