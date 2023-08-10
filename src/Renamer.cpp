@@ -46,7 +46,7 @@ struct Weapons
 	const std::vector<std::string> blades = { "WeapTypeSword", "WeapTypeGreatsword", "WeapTypeDagger" };
 	const std::vector<std::string> axes = { "WeapTypeWarAxe", "WeapTypeBattleaxe" };
 	const std::vector<std::string> bludgeons = { "WeapTypeMace", "WeapTypeWarhammer" };
-	const std::vector<std::string> staffs = { "WeapTypeStaff" };
+	const std::vector<std::string> staffs = { "VendorItemStaff", "WeapTypeStaff" };
 };
 
 struct Armors
