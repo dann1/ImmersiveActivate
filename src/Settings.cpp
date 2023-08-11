@@ -2,103 +2,121 @@
 
 bool Settings::LoadSettings()
 {
-	constexpr auto path = L"Data/SKSE/Plugins/ImmersiveActivate.ini";
-
 	CSimpleIniA ini;
-	ini.SetUnicode();
 
+	constexpr auto path = L"Data/SKSE/Plugins/ImmersiveActivate.ini";
+	ini.SetUnicode();
 	ini.LoadFile(path);
 
-	const auto get_value = [&]<class T>(T& a_value, const char* a_section, const char* a_key, const char* a_comment) {
+	const auto get_value = [&]<class T>(T& a_value, const char* a_section, const char* a_key) {
 		if constexpr (std::is_same_v<bool, T>) {
 			a_value = ini.GetBoolValue(a_section, a_key, a_value);
-			ini.SetBoolValue(a_section, a_key, a_value, a_comment);
 		} else {
 			a_value = ini.GetValue(a_section, a_key, a_value.c_str());
-			ini.SetValue(a_section, a_key, a_value.c_str(), a_comment);
 		}
 	};
 
-	//delete and recreate sections IF old section was found
-	if (const auto section = ini.GetSection("NPCs"); section && !section->empty()) {
-		ini.Delete("NPCs", nullptr, true);
-		ini.Delete("Doors", nullptr, true);
-		ini.Delete("Furniture", nullptr, true);
-		ini.Delete("Flora", nullptr, true);
-		ini.Delete("Items", nullptr, true);
-		ini.Delete("Steal/Pickpocket", nullptr, true);
-		ini.Delete("Owned", nullptr, true);
-		ini.Delete("Locked", nullptr, true);
-		ini.Delete("Empty", nullptr, true);
-	}
+	const char* section = "Hide All Text";
 
-	get_value(npc.hideAll, "Hide All Text", npc.type.c_str(), ";Hide all names and activation prompts");
-	get_value(activators.hideAll, "Hide All Text", activators.type.c_str(), nullptr);
-	get_value(containers.hideAll, "Hide All Text", containers.type.c_str(), nullptr);
-	get_value(doors.hideAll, "Hide All Text", doors.type.c_str(), nullptr);
-	get_value(flora.hideAll, "Hide All Text", flora.type.c_str(), nullptr);
-	get_value(furniture.hideAll, "Hide All Text", furniture.type.c_str(), nullptr);
-	get_value(items.hideAll, "Hide All Text", items.type.c_str(), nullptr);
-	get_value(projectiles.hideAll, "Hide All Text", projectiles.type.c_str(), nullptr);
+	get_value(npc.hideAll, section, npc.type.c_str());
+	get_value(activators.hideAll, section, activators.type.c_str());
+	get_value(containers.hideAll, section, containers.type.c_str());
+	get_value(doors.hideAll, section, doors.type.c_str());
+	get_value(flora.hideAll, section, flora.type.c_str());
+	get_value(furniture.hideAll, section, furniture.type.c_str());
+	get_value(items.hideAll, section, items.type.c_str());
+	get_value(projectiles.hideAll, section, projectiles.type.c_str());
 
-	get_value(npc.hideButton, "Hide Button", npc.type.c_str(), ";Hide activate button, eg. [E]. This setting may not work if you have HUD mods that bypass vanilla functionality");
-	get_value(activators.hideButton, "Hide Button", activators.type.c_str(), nullptr);
-	get_value(containers.hideButton, "Hide Button", containers.type.c_str(), nullptr);
-	get_value(doors.hideButton, "Hide Button", doors.type.c_str(), nullptr);
-	get_value(flora.hideButton, "Hide Button", flora.type.c_str(), nullptr);
-	get_value(furniture.hideButton, "Hide Button", furniture.type.c_str(), nullptr);
-	get_value(items.hideButton, "Hide Button", items.type.c_str(), nullptr);
-	get_value(projectiles.hideButton, "Hide Button", projectiles.type.c_str(), nullptr);
+	section = "Hide Button";
 
-	get_value(npc.hideText, "Hide Text", npc.type.c_str(), ";Hide activate text, eg. Talk, Pickpocket, Harvest, Sleep");
-	get_value(activators.hideText, "Hide Text", activators.type.c_str(), nullptr);
-	get_value(containers.hideText, "Hide Text", containers.type.c_str(), nullptr);
-	get_value(doors.hideText, "Hide Text", doors.type.c_str(), nullptr);
-	get_value(flora.hideText, "Hide Text", flora.type.c_str(), nullptr);
-	get_value(furniture.hideText, "Hide Text", furniture.type.c_str(), nullptr);
-	get_value(items.hideText, "Hide Text", items.type.c_str(), nullptr);
-	get_value(projectiles.hideText, "Hide Text", projectiles.type.c_str(), nullptr);
+	get_value(npc.hideButton, section, npc.type.c_str());
+	get_value(activators.hideButton, section, activators.type.c_str());
+	get_value(containers.hideButton, section, containers.type.c_str());
+	get_value(doors.hideButton, section, doors.type.c_str());
+	get_value(flora.hideButton, section, flora.type.c_str());
+	get_value(furniture.hideButton, section, furniture.type.c_str());
+	get_value(items.hideButton, section, items.type.c_str());
+	get_value(projectiles.hideButton, section, projectiles.type.c_str());
 
-	get_value(steal.useColoredName, "Steal/Pickpocket", "Show Indicator Using Name", ";Item/NPC names turn red (or custom color defined below).");
-	get_value(steal.nameColor, "Steal/Pickpocket", "Custom Indicator Color", ";Color, in hex (default: red)");
+	section = "Hide Text";
 
-	get_value(owned.useColoredName, "Owned", "Show Indicator Using Name", ";Owned furniture name turns yellow (or custom color defined below).");
-	get_value(owned.nameColor, "Owned", "Custom Indicator Color", ";Color, in hex (default: yellow)");
+	get_value(npc.hideText, section, npc.type.c_str());
+	get_value(activators.hideText, section, activators.type.c_str());
+	get_value(containers.hideText, section, containers.type.c_str());
+	get_value(doors.hideText, section, doors.type.c_str());
+	get_value(flora.hideText, section, flora.type.c_str());
+	get_value(furniture.hideText, section, furniture.type.c_str());
+	get_value(items.hideText, section, items.type.c_str());
+	get_value(projectiles.hideText, section, projectiles.type.c_str());
 
-	get_value(locked.hideTag, "Locked", "Hide Locked Tag", ";Hide locked status (eg. Apprentice, Adept, Master)");
-	get_value(locked.tag, "Locked", "Custom Locked Tag", ";Set custom tag for all locked objects. Leave entry blank if you don't want to set it\n;No effect if Hide Lock Tag is true.");
-	get_value(locked.color.useColoredName, "Locked", "Show Indicator Using Name", ";Locked object names turn yellow (or custom color defined below).");
-	get_value(locked.color.nameColor, "Locked", "Custom Indicator Color", ";Color, in hex (default: yellow)");
+	section = "Steal/Pickpocket";
 
-	get_value(empty.hideTag, "Empty", "Hide Empty Tag", ";Hide empty container state");
-	get_value(empty.tag, "Empty", "Custom Empty Tag", ";Set custom tag for empty objects (eg. [Empty]). Leave entry blank if you don't want to set it\n;No effect if Hide Empty Tag is true.");
-	get_value(empty.color.useColoredName, "Empty", "Show Indicator Using Name", ";Empty container names turn grey (or custom color defined below).");
-	get_value(empty.color.nameColor, "Empty", "Custom Indicator Color", ";Color, in hex (default: grey)");
+	get_value(steal.useColoredName, section, "Show Indicator Using Name");
+	get_value(steal.nameColor, section, "Custom Indicator Color");
 
-	//Name Replacers
-	const char* section = "Display Replacers";
+	section = "Owned";
 
-	get_value(alchemy_item_show.text, section, "Alchemical Items", ";Hide Potion and Poison name and show generic prompt");
-	get_value(ammo_show.text, section, "Ammunition", ";Hide Ammo name and show generic prompt");
-	get_value(armor_show.text, section, "Armors", ";Hide Armor name and show generic prompt");
-	get_value(book_show.text, section, "Books", ";Hide Book name and show generic prompt");
-	get_value(container_show.text, section, "Containers", ";Hide container name and shows generic prompt");
-	get_value(door_show.text, section, "Doors", ";Hide cell name the door leads to and shows generic promt");
-	get_value(ingredient_show.text, section, "Ingredients", ";Hide Ingredient name and show generic prompt");
-	get_value(item_show.text, section, "Various Items", ";Hide names of the rest of the non-specified items and show generic prompt");
-	get_value(jewelry_show.text, section, "Jewels", ";Hide Jewelry item name and show generic prompt");
-	get_value(key_show.text, section, "Keys", ";Hide Key name and show generic prompt");
-	get_value(money_show.text, section, "Money", ";Hide Septims (FormID 0F in Hexadecimal) and show generic prompt");
-	get_value(npc_animal_show.text, section, "NPCsAnimals", ";Hide NPC name and show generic prompt when NPC is an Animal");
-	get_value(npc_child_show.text, section, "NPCsChildren", ";Hide NPC name and show generic prompt when NPC is a child");
-	get_value(npc_dead_show.text, section, "NPCsCorpses", ";Hide NPC name and show generic prompt when NPC is dead. Takes priorty over other NPC name replacers");
-	get_value(npc_show.text, section, "NPCs", ";Hide NPC name and show generic prompt");
-	get_value(resource_show.text, section, "Flora", ";Hide Flora and Plant name and show generic prompt");
-	get_value(scroll_note_show.text, section, "Scrolls & Notes", ";Hide Scroll and Note name and show generic prompt");
-	get_value(gem.text, section, "Gems", ";Hide Gem name and show generic prompt");
-	get_value(weapon_show.text, section, "Weapons", ";Hide Weapon name and show generic prompt");
+	get_value(owned.useColoredName, section, "Show Indicator Using Name");
+	get_value(owned.nameColor, section, "Custom Indicator Color");
 
-	(void)ini.SaveFile(path);
+	section = "Locked";
+
+	get_value(locked.hideTag, section, "Hide Locked Tag");
+	get_value(locked.tag, section, "Custom Locked Tag");
+	get_value(locked.color.useColoredName, section, "Show Indicator Using Name");
+	get_value(locked.color.nameColor, section, "Custom Indicator Color");
+
+	section = "Empty";
+
+	get_value(empty.hideTag, section, "Hide Empty Tag");
+	get_value(empty.tag, section, "Custom Empty Tag");
+	get_value(empty.color.useColoredName, section, "Show Indicator Using Name");
+	get_value(empty.color.nameColor, section, "Custom Indicator Color");
+
+	section = "Display Replacers";
+
+	get_value(rAmmo.text, section, "Ammo");
+	get_value(rArmor.text, section, "Armor");
+	get_value(rArmorChest.text, section, "Cuirasses");
+	get_value(rArmorCloth.text, section, "Clothing");
+	get_value(rArmorFeet.text, section, "Boots");
+	get_value(rArmorHands.text, section, "Gauntlets");
+	get_value(rArmorHead.text, section, "Helmets");
+	get_value(rArmorShield.text, section, "Shields");
+	get_value(rBook.text, section, "Books");
+	get_value(rConsumable.text, section, "Consumables");
+	get_value(rConsumableAlchemy.text, section, "Flasks");
+	get_value(rContainer.text, section, "Containers");
+	get_value(rDoor.text, section, "Doors");
+	get_value(rIngredient.text, section, "Ingredients");
+	get_value(rJewel.text, section, "Jewelry");
+	get_value(rJewelFinger.text, section, "Rings");
+	get_value(rJewelHead.text, section, "Circlets");
+	get_value(rJewelNeck.text, section, "Necklaces");
+	get_value(rKey.text, section, "Keys");
+	get_value(rMisc.text, section, "MiscItems");
+	get_value(rMiscBard.text, section, "Instruments");
+	get_value(rMiscGem.text, section, "Gems");
+	get_value(rMiscWood.text, section, "Lumber");
+	get_value(rMiscOre.text, section, "Metals");
+	get_value(rMiscRemain.text, section, "Remains");
+	get_value(rMiscSkin.text, section, "Skins");
+	get_value(rMoney.text, section, "Septims");
+	get_value(rMoneyPurse.text, section, "CoinPurses");
+	get_value(rNPC.text, section, "NPCs");
+	get_value(rNPCAnimal.text, section, "NPCsAnimals");
+	get_value(rNPCChild.text, section, "NPCsChildren");
+	get_value(rNPCCorpse.text, section, "NPCsCorpses");
+	get_value(rNPCDragon.text, section, "NPCsDragons");
+	get_value(rPaper.text, section, "Papers");
+	get_value(rResource.text, section, "Resources");
+	get_value(rWeapon.text, section, "Weapons");
+	get_value(rWeaponAxe.text, section, "WeaponsAxe");
+	get_value(rWeaponBlade.text, section, "WeaponsBlade");
+	get_value(rWeaponBlunt.text, section, "WeaponsBlunt");
+	get_value(rWeaponBow.text, section, "WeaponsBow");
+	get_value(rWeaponCrossbow.text, section, "WeaponsCrossBow");
+	get_value(rWeaponStaff.text, section, "WeaponsStaff");
 
 	return true;
 }
@@ -125,7 +143,6 @@ const Settings::Text* Settings::GetText(const RE::FormType a_formType) const
 		return &items;
 	}
 }
-
 
 const Settings::Text* Settings::GetText(const RE::TESObjectREFRPtr& a_object) const
 {
