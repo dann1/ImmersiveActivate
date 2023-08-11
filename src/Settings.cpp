@@ -97,11 +97,12 @@ bool Settings::LoadSettings()
 	get_value(rMisc.text, section, "MiscItems");
 	get_value(rMiscBard.text, section, "Instruments");
 	get_value(rMiscGem.text, section, "Gems");
-	get_value(rMiscLockpick.text, section, "Lockpicks");
+	get_value(rMiscWood.text, section, "Lumber");
 	get_value(rMiscOre.text, section, "Metals");
 	get_value(rMiscRemain.text, section, "Remains");
 	get_value(rMiscSkin.text, section, "Skins");
 	get_value(rMoney.text, section, "Septims");
+	get_value(rMoneyPurse.text, section, "CoinPurses");
 	get_value(rNPC.text, section, "NPCs");
 	get_value(rNPCAnimal.text, section, "NPCsAnimals");
 	get_value(rNPCChild.text, section, "NPCsChildren");
@@ -116,8 +117,6 @@ bool Settings::LoadSettings()
 	get_value(rWeaponBow.text, section, "WeaponsBow");
 	get_value(rWeaponCrossbow.text, section, "WeaponsCrossBow");
 	get_value(rWeaponStaff.text, section, "WeaponsStaff");
-
-	(void)ini.SaveFile(path);
 
 	return true;
 }

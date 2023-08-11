@@ -134,6 +134,8 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 		return ReplaceRefText(a_text, s->rContainer.text);
 	case RE::FormType::Flora:
 	case RE::FormType::Tree:
+		if (a_object->NameIncludes("Purse")) return ReplaceRefText(a_text, s->rMoneyPurse.text);
+
 		return ReplaceRefText(a_text, s->rResource.text);
 	case RE::FormType::Ingredient:
 		return ReplaceRefText(a_text, s->rIngredient.text);
@@ -141,7 +143,7 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 		{
 			Flasks flasks;
 
-			if (a_baseObject->HasAnyKeywordByEditorID(flasks.flasks) || a_baseFormID == flasks.skooma || a_baseFormID == flasks.skoomaRedWater) {
+			if (a_baseObject->HasAnyKeywordByEditorID(flasks.flasks) || a_baseObject->IsSkooma()) {
 				return ReplaceRefText(a_text, s->rConsumableAlchemy.text);
 			}
 
@@ -213,10 +215,10 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 		{
 			Misc misc;
 
-			if (a_baseFormID == 0xF) {  // Septim
+			if (a_baseObject->IsGold()) {
 				return ReplaceRefText(a_text, s->rMoney.text);
-			} else if (a_baseFormID == 0xA) { // Lockpick
-				return ReplaceRefText(a_text, s->rMiscLockpick.text);
+			} else if (a_baseObject->IsLockpick()) {
+				return a_text;
 			} else if (a_baseObject->HasAnyKeywordByEditorID(misc.gems)) {
 				return ReplaceRefText(a_text, s->rMiscGem.text);
 			} else if (a_baseObject->HasAnyKeywordByEditorID(misc.metals)) {
@@ -225,6 +227,8 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 				return ReplaceRefText(a_text, s->rMiscRemain.text);
 			} else if (a_baseObject->HasAnyKeywordByEditorID(misc.leather)) {
 				return ReplaceRefText(a_text, s->rMiscSkin.text);
+			} else if (a_baseObject->HasAnyKeywordByEditorID({ "VendorItemFirewood" })) {
+				return ReplaceRefText(a_text, s->rMiscWood.text);
 			} else if (a_baseObject->HasAnyKeywordByEditorID(misc.instruments)) {
 				return ReplaceRefText(a_text, s->rMiscBard.text);
 			} else if (a_baseFormID == books.bookBurnt) {

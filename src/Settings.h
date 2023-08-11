@@ -86,11 +86,12 @@ public:
 	Replacer rMisc{ "Item" };
 	Replacer rMiscBard{ "Instrument" };
 	Replacer rMiscGem{ "Gem" };
-	Replacer rMiscLockpick{ "Lockpick" };
+	Replacer rMiscWood{ "Lumber" };
 	Replacer rMiscOre{ "Metal" };
 	Replacer rMiscRemain{ "Remains" };
 	Replacer rMiscSkin{ "Leather" };
 	Replacer rMoney{ "Money" };
+	Replacer rMoneyPurse{ "Purse" };
 	Replacer rNPC{ "Person" };
 	Replacer rNPCAnimal{ "Animal" };
 	Replacer rNPCChild{ "Child" };
