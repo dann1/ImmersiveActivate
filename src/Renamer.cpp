@@ -61,8 +61,6 @@ struct Armors
 
 struct Flasks
 {
-	const std::uint32_t skooma = 0x00057A7A;
-	const std::uint32_t skoomaRedWater = 0x0201391D;
 	const std::vector<std::string> flasks = { "VendorItemPotion", "VendorItemPoison" };
 };
 
