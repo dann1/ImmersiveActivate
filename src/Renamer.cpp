@@ -83,6 +83,35 @@ struct Misc
 	const std::vector<std::string> leather = { "VendorItemAnimalHide" };
 	const std::vector<std::string> remains = { "VendorItemAnimalPart" };
 	const std::vector<std::string> instruments = { "VendorItemBardInstrument" };
+	const std::vector<std::string> utensils = { "OCF_WeapTypeCutlery1H" };
+};
+
+struct Shapes
+{
+	const std::vector<std::string> claws = { "OCF_RelicNordic_DragonClaw" };
+	const std::vector<std::string> bottles = { "OCF_VesselBottle" };
+	const std::vector<std::string> bowls = { "OCF_VesselBowl" };
+	const std::vector<std::string> pots = { "OCF_VesselPot" };
+	const std::vector<std::string> baskets = { "OCF_VesselBasket" };
+	const std::vector<std::string> buckets = { "OCF_VesselBucket" };
+	const std::vector<std::string> plates = { "OCF_VesselPlate" };
+	const std::vector<std::string> jars = { "OCF_VesselTankard" };
+	const std::vector<std::string> jugs = { "OCF_VesselJug" };
+	const std::vector<std::string> cups = { "OCF_VesselCup" };
+	const std::vector<std::string> waterskins = { "OCF_VesselWaterskin" };
+	const std::vector<std::string> brooms = { "OCF_ToolBroom" };
+	const std::vector<std::string> shovels = { "OCF_ToolShovel" };
+	const std::vector<std::string> tusks = { "OCF_IngrRemains_SharpTusk" };
+};
+
+struct Provisions
+{
+	const std::vector<std::string> treats = { "OCF_AlchFood_Treat", "OCF_AlchFood_Baked" };
+	const std::vector<std::string> organs = { "OCF_IngrRemains_Organ" };
+	const std::vector<std::string> cheeses = { "OCF_AlchFood_Cheese" };
+	const std::vector<std::string> breads = { "OCF_AlchFood_Bread" };
+	const std::vector<std::string> meats = { "OCF_AlchFood_Seafood", "OCF_AlchFood_Meat" };
+	const std::vector<std::string> produces = { "OCF_AlchFood_Vegetable", "OCF_AlchFood_Fruit" };
 };
 
 std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_text, const Settings* s)
@@ -109,6 +138,8 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 #endif
 
 	Books books;
+	Provisions provisions;
+	Shapes shapes;
 
 	switch (a_formType) {
 	case RE::FormType::NPC:
@@ -132,7 +163,8 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 		return ReplaceRefText(a_text, s->rContainer.text);
 	case RE::FormType::Flora:
 	case RE::FormType::Tree:
-		if (a_object->NameIncludes("Purse")) return ReplaceRefText(a_text, s->rMoneyPurse.text);
+		if (a_object->NameIncludes("Purse"))
+			return ReplaceRefText(a_text, s->rMoneyPurse.text);
 
 		return ReplaceRefText(a_text, s->rResource.text);
 	case RE::FormType::Ingredient:
@@ -143,6 +175,24 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 
 			if (a_baseObject->HasAnyKeywordByEditorID(flasks.flasks) || a_baseObject->IsSkooma()) {
 				return ReplaceRefText(a_text, s->rConsumableAlchemy.text);
+			} else if (a_baseObject->HasAnyKeywordByEditorID(shapes.bottles)) {
+				return ReplaceRefText(a_text, "Bottle");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(shapes.bowls)) {
+				return ReplaceRefText(a_text, "Bowl");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(shapes.waterskins)) {
+				return ReplaceRefText(a_text, "Waterskin");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(provisions.organs)) {
+				return ReplaceRefText(a_text, "Organ");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(provisions.cheeses)) {
+				return ReplaceRefText(a_text, "Cheese");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(provisions.treats)) {
+				return ReplaceRefText(a_text, "Treat");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(provisions.breads)) {
+				return ReplaceRefText(a_text, "Bread");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(provisions.meats)) {
+				return ReplaceRefText(a_text, "Meat");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(provisions.produces)) {
+				return ReplaceRefText(a_text, "Produce");
 			}
 
 			return ReplaceRefText(a_text, s->rConsumable.text);
@@ -217,18 +267,48 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 				return ReplaceRefText(a_text, s->rMoney.text);
 			} else if (a_baseObject->IsLockpick()) {
 				return a_text;
+			} else if (a_baseObject->HasAnyKeywordByEditorID(shapes.bottles)) {
+				return ReplaceRefText(a_text, "Bottle");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(shapes.pots)) {
+				return ReplaceRefText(a_text, "Pot");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(shapes.baskets)) {
+				return ReplaceRefText(a_text, "Basket");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(shapes.buckets)) {
+				return ReplaceRefText(a_text, "Bucket");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(shapes.plates)) {
+				return ReplaceRefText(a_text, "Plate");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(shapes.bowls)) {
+				return ReplaceRefText(a_text, "Bowl");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(shapes.jars)) {
+				return ReplaceRefText(a_text, "Jar");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(shapes.cups)) {
+				return ReplaceRefText(a_text, "Cup");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(shapes.jugs)) {
+				return ReplaceRefText(a_text, "Jug");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(shapes.brooms)) {
+				return ReplaceRefText(a_text, "Broom");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(shapes.shovels)) {
+				return ReplaceRefText(a_text, "Shovel");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(shapes.waterskins)) {
+				return ReplaceRefText(a_text, "Waterskin");
 			} else if (a_baseObject->HasAnyKeywordByEditorID(misc.gems)) {
 				return ReplaceRefText(a_text, s->rMiscGem.text);
 			} else if (a_baseObject->HasAnyKeywordByEditorID(misc.metals)) {
 				return ReplaceRefText(a_text, s->rMiscOre.text);
+			} else if (a_baseObject->HasAnyKeywordByEditorID(shapes.tusks)) {
+				return ReplaceRefText(a_text, "Tusk");
 			} else if (a_baseObject->HasAnyKeywordByEditorID(misc.remains)) {
 				return ReplaceRefText(a_text, s->rMiscRemain.text);
 			} else if (a_baseObject->HasAnyKeywordByEditorID(misc.leather)) {
 				return ReplaceRefText(a_text, s->rMiscSkin.text);
 			} else if (a_baseObject->HasAnyKeywordByEditorID({ "VendorItemFirewood" })) {
 				return ReplaceRefText(a_text, s->rMiscWood.text);
+			} else if (a_baseObject->HasAnyKeywordByEditorID(misc.utensils)) {
+				return ReplaceRefText(a_text, "Utensil");
 			} else if (a_baseObject->HasAnyKeywordByEditorID(misc.instruments)) {
 				return ReplaceRefText(a_text, s->rMiscBard.text);
+			} else if (a_baseObject->HasAnyKeywordByEditorID(shapes.claws)) {
+				return ReplaceRefText(a_text, "Claw");
 			} else if (a_baseFormID == books.bookBurnt) {
 				return ReplaceRefText(a_text, s->rBook.text);
 			}
