@@ -163,7 +163,7 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 				return ReplaceRefText(a_text, s->rWeaponBlunt.text);
 			} else if (a_baseObject->HasAnyKeywordByEditorID({ "WeapTypeBow" })) {
 				auto a_baseWeapon = a_baseObject->As<RE::TESObjectWEAP>();
-				return ReplaceRefText(a_text, a_baseWeapon->IsCrossbow() ? s->rWeaponBow.text : s->rWeaponCrossbow.text);
+				return ReplaceRefText(a_text, a_baseWeapon->IsCrossbow() ? s->rWeaponCrossbow.text : s->rWeaponBow.text);
 			}
 
 			return ReplaceRefText(a_text, s->rWeapon.text);
