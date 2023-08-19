@@ -161,6 +161,8 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 	case RE::FormType::Door:
 		return ReplaceRefText(a_text, s->rDoor.text);
 	case RE::FormType::Activator:
+		if (a_object->NameIncludes("Ore Vein"))
+			return ReplaceRefText(a_text, "Ore");
 	case RE::FormType::Furniture:
 		return a_text;
 	case RE::FormType::Container:
