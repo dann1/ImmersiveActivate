@@ -1,10 +1,6 @@
 #include "Renamer.h"
 #include "Settings.h"
 
-// Object Names have 2 or lines. Replacing the whole name leads to plain white text.
-// Action: Talk, Sleep with optional color formatting
-// Name: Camilla Carlotta, Bed (Owned)
-// Embedded Images: empty tag triangle, or locked
 std::string ReplaceRefText(const std::string& original, const std::string& replacement)
 {
 	std::vector<std::string> lines;
@@ -41,86 +37,6 @@ std::string DecideSkip(std::string a_setting_value, std::string a_text)
 	return ReplaceRefText(a_text, a_setting_value);
 }
 
-struct Weapons
-{
-	const std::vector<std::string> blades = { "WeapTypeSword", "WeapTypeGreatsword", "WeapTypeDagger" };
-	const std::vector<std::string> axes = { "WeapTypeWarAxe", "WeapTypeBattleaxe" };
-	const std::vector<std::string> bludgeons = { "WeapTypeMace", "WeapTypeWarhammer" };
-	const std::vector<std::string> staffs = { "VendorItemStaff", "WeapTypeStaff" };
-	const std::vector<std::string> ranged = { "WeapTypeBow" };
-};
-
-struct Armors
-{
-	const std::vector<std::string> head = { "ArmorHelmet" };
-	const std::vector<std::string> chest = { "ArmorCuirass" };
-	const std::vector<std::string> hands = { "ArmorGauntlets" };
-	const std::vector<std::string> feet = { "ArmorBoots" };
-	const std::vector<std::string> shield = { "ArmorShield" };
-	const std::vector<std::string> cloth = { "ArmorClothing" };
-};
-
-struct Flasks
-{
-	const std::vector<std::string> flasks = { "VendorItemPotion", "VendorItemPoison" };
-};
-
-struct Jewels
-{
-	const std::vector<std::string> finger = { "ClothingRing" };
-	const std::vector<std::string> neck = { "ClothingNecklace" };
-	const std::vector<std::string> head = { "ClothingCirclet" };
-};
-
-struct Books
-{
-	const std::uint32_t bookBurnt = 0x000E3CB7;
-};
-struct Provisions
-{
-	const std::vector<std::string> treats = { "OCF_AlchFood_Treat", "OCF_AlchFood_Baked" };
-	const std::vector<std::string> organs = { "OCF_IngrRemains_Organ" };
-	const std::vector<std::string> cheeses = { "OCF_AlchFood_Cheese" };
-	const std::vector<std::string> breads = { "OCF_AlchFood_Bread" };
-	const std::vector<std::string> meats = { "OCF_AlchFood_Seafood", "OCF_AlchFood_Meat" };
-	const std::vector<std::string> produces = { "OCF_AlchFood_Vegetable", "OCF_AlchFood_Fruit" };
-};
-
-struct Shapes
-{
-	const std::vector<std::string> claws = { "OCF_RelicNordic_DragonClaw" };
-	const std::vector<std::string> strip = { "OCF_AnimalHideStrip" };
-	const std::vector<std::string> bottles = { "OCF_VesselBottle" };
-	const std::vector<std::string> bowls = { "OCF_VesselBowl" };
-	const std::vector<std::string> pots = { "OCF_VesselPot" };
-	const std::vector<std::string> baskets = { "OCF_VesselBasket" };
-	const std::vector<std::string> buckets = { "OCF_VesselBucket" };
-	const std::vector<std::string> plates = { "OCF_VesselPlate" };
-	const std::vector<std::string> jars = { "OCF_VesselTankard" };
-	const std::vector<std::string> jugs = { "OCF_VesselJug" };
-	const std::vector<std::string> cups = { "OCF_VesselCup" };
-	const std::vector<std::string> waterskins = { "OCF_VesselWaterskin" };
-	const std::vector<std::string> brooms = { "OCF_ToolBroom" };
-	const std::vector<std::string> shovels = { "OCF_ToolShovel" };
-	const std::vector<std::string> lanterns = { "OCF_ToolLantern" };
-};
-struct Materials
-{
-	const std::vector<std::string> bone = { "OCF_IngrRemains_Bone" };
-	const std::vector<std::string> shell = { "OCF_IngrRemains_Plate" };
-	const std::vector<std::string> metal = { "VendorItemOreIngot" };
-	const std::vector<std::string> wood = { "VendorItemFirewood" };
-	const std::vector<std::string> leather = { "VendorItemAnimalHide" };
-};
-
-struct Misc
-{
-	const std::vector<std::string> gems = { "VendorItemGem", "VendorItemSoulGem" };
-	const std::vector<std::string> remains = { "VendorItemAnimalPart" };
-	const std::vector<std::string> instruments = { "VendorItemBardInstrument" };
-	const std::vector<std::string> utensils = { "OCF_WeapTypeCutlery1H" };
-};
-
 std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::string a_text, const Settings* s)
 {
 	const auto a_baseObject = a_object->GetBaseObject();
@@ -143,8 +59,10 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 	logger::debug("{}", a_text);
 	logger::debug("------------- Original Name End ---------------------");
 #endif
+
 	Shapes shapes;
 
+	// TODO: Make everything skippable
 	switch (a_formType) {
 	case RE::FormType::NPC:
 	case RE::FormType::LeveledNPC:
@@ -171,7 +89,6 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 	case RE::FormType::Tree:
 		if (a_object->NameIncludes("Purse"))
 			return ReplaceRefText(a_text, s->rMoneyPurse.text);
-
 		return ReplaceRefText(a_text, s->rResource.text);
 	case RE::FormType::Ingredient:
 		return ReplaceRefText(a_text, s->rIngredient.text);
@@ -210,7 +127,9 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 		{
 			Weapons weapons;
 
-			if (a_baseObject->HasAnyKeywordByEditorID(weapons.blades)) {
+			if (a_baseObject->HasAnyKeywordByEditorID(weapons.rods)) {
+				return ReplaceRefText(a_text, "Rod");
+			} else if (a_baseObject->HasAnyKeywordByEditorID(weapons.blades)) {
 				return ReplaceRefText(a_text, s->rWeaponBlade.text);
 			} else if (a_baseObject->HasAnyKeywordByEditorID(weapons.axes)) {
 				return ReplaceRefText(a_text, s->rWeaponAxe.text);
@@ -261,6 +180,10 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 		}
 	case RE::FormType::Scroll:
 	case RE::FormType::Note:
+		// TODO: Notes have the Type: Book/Tome set in the Form record. Workarounds
+		// YNAM - ITMNoteUp
+		// INAM - HighPolynote - unreliable
+		// MODL - Note.nif - unreliable
 		return ReplaceRefText(a_text, s->rPaper.text);
 	case RE::FormType::Book:
 		return ReplaceRefText(a_text, s->rBook.text);
@@ -310,7 +233,7 @@ std::string ReplaceFormTypeText(const RE::TESObjectREFRPtr& a_object, std::strin
 				return ReplaceRefText(a_text, "Utensil");
 			} else if (a_baseObject->HasAnyKeywordByEditorID(misc.gems)) {
 				return ReplaceRefText(a_text, s->rMiscGem.text);
-			} else if (a_baseFormID == books.bookBurnt) {
+			} else if (books.contains(a_baseFormID)) {
 				return ReplaceRefText(a_text, s->rBook.text);
 			} else if (a_baseObject->HasAnyKeywordByEditorID(misc.instruments)) {
 				return ReplaceRefText(a_text, s->rMiscBard.text);

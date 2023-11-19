@@ -99,6 +99,8 @@ public:
 	Replacer rNPCDragon{ "Dragon" };
 	Replacer rPaper{ "Document" };
 	Replacer rResource{ "Resource" };
+	Replacer rResourcePurse{ "Purse" };
+	Replacer rResourceVein{ "Ore" };
 	Replacer rWeapon{ "Weapon" };
 	Replacer rWeaponAxe{ "Axe" };
 	Replacer rWeaponBlade{ "Blade" };

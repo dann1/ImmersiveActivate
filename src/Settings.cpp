@@ -110,6 +110,8 @@ bool Settings::LoadSettings()
 	get_value(rNPCDragon.text, section, "NPCsDragons");
 	get_value(rPaper.text, section, "Papers");
 	get_value(rResource.text, section, "Resources");
+	get_value(rResourcePurse.text, section, "Purses");
+	get_value(rResourceVein.text, section, "Veins");
 	get_value(rWeapon.text, section, "Weapons");
 	get_value(rWeaponAxe.text, section, "WeaponsAxe");
 	get_value(rWeaponBlade.text, section, "WeaponsBlade");
