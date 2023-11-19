@@ -51,8 +51,12 @@
         "CMAKE_CXX_FLAGS": "/EHsc /MP /W4 /WX /external:W0 $penv{CXXFLAGS}"
       },
       "generator": "Visual Studio 17 2022",
-      "inherits": ["cmake-dev", "vcpkg", "windows"],
-      "name": "SE Debug",
+      "inherits": [
+        "cmake-dev",
+        "vcpkg",
+        "windows"
+      ],
+      "name": "vs2022-windows-vcpkg-se",
       "toolset": "v143"
     },
     {
@@ -62,23 +66,12 @@
         "BUILD_SKYRIMAE": true
       },
       "generator": "Visual Studio 17 2022",
-      "inherits": ["cmake-dev", "vcpkg", "windows"],
-      "name": "AE Debug",
-      "toolset": "v143"
-    },
-    {
-      "binaryDir": "${sourceDir}/buildae-release",
-      "cacheVariables": {
-        "CMAKE_CXX_FLAGS": "/EHsc /MP /W4 /WX /external:W0 $penv{CXXFLAGS}",
-		"CMAKE_BUILD_TYPE": {
-		  "type": "STRING",
-		  "value": "Release"
-		},
-        "BUILD_SKYRIMAE": true
-      },
-      "generator": "Visual Studio 17 2022",
-      "inherits": ["cmake-dev", "vcpkg", "windows"],
-      "name": "AE Release",
+      "inherits": [
+        "cmake-dev",
+        "vcpkg",
+        "windows"
+      ],
+      "name": "vs2022-windows-vcpkg-ae",
       "toolset": "v143"
     }
   ],
